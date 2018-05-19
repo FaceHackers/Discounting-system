@@ -1,1 +1,1 @@
-# Discounting-system
+# 優惠兌獎系統
