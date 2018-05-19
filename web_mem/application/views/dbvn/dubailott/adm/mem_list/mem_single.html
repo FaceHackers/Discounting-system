@@ -1,0 +1,154 @@
+<div class="clearfix mem_sin">
+	<div class="col-xs-6 col-md-2">
+		<div class="input-group">
+			<span class="input-group-addon">會員速查：</span>
+			<input type="text" id="searchInput" class="form-control">
+			<span class="input-group-btn"><input type="button" class="btn btn-primary cls_child" id="mem_ser" value="查詢"></span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-2" id="mem_ticket" style="display: none">
+		<div class="input-group">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-primary cls_child" id="voucher_inquiry">兌獎卷查詢</button>
+				<button type="button" class="btn btn-primary cls_child" id="duijiang_number">兌獎號碼</button>
+			</span>
+		</div>
+	</div>
+</div>
+<div id="headerPage"  style="margin: 20px 0; display: none">
+	<div class="box-body">
+		<table id="mem_sin_Grid"></table>
+	</div>
+</div>
+<script>
+	var mem_sin_Fn = function(){
+        var _this = this;
+        var that = $(".mem_sin");
+		var fn = {
+			/* 表格標題 內容 */
+            voucherGrid: function(){
+				var colNames = [
+						'兌獎卷新增時間',
+						'賬號',
+						'每日最高存款金額',
+						'獲得兌獎卷數量',
+                        '未使用彩卷數量',
+						'累计有效卷数',
+						'有效日期',
+						'備註'
+					],
+					colModel = [
+						{ name: 'ticket_add_time', width: 25, align: 'center'},
+						{ name: 'acc_deposit', width: 25, align: 'center'},
+						{ name: 'max_deposit', width: 25, align: 'center'},
+                        { name: 'ticket_num', width: 25, align: 'center'},
+                        { name: 'no_use_ticket', width: 25, align: 'center'},
+                        { name: 'cumulatively_effective', width: 25, align: 'center'},
+                        { name: 'effective_date', width: 25, align: 'center'},
+                        { name: 'remark', width: 25, align: 'center'}
+					];
+
+                jgrid.create('#mem_sin_Grid', colNames, colModel);
+			},
+			/* 表格標題 內容 */
+            duijiangGrid: function(){
+                var colNames = [
+                        '轉號日期',
+                        '賬號',
+                        '轉出號碼',
+                        '兌獎期數',
+                        '兌獎結果',
+                        '可獲得彩金'
+                    ],
+                    colModel = [
+                        { name: 'turn_time', width: 25, align: 'center'},
+                        { name: 'turn_acc', width: 25, align: 'center'},
+                        { name: 'turn_num', width: 25, align: 'center'},
+                        { name: 'order_per', width: 25, align: 'center'},
+                        { name: 'result', width: 25, align: 'center'},
+                        { name: 'receive_bonus', width: 25, align: 'center'}
+                    ];
+
+                jgrid.create('#mem_sin_Grid', colNames, colModel);
+            },
+			init: function(){
+				var _this = this;
+
+                $('.cls_child').on('click', function(){
+                    $(this).siblings().removeClass('active'); /* 查找 此元素 並移除  active 元素*/
+                    $(this).addClass('active'); /* 加入 active 元素*/
+
+                    var type = $(this).attr('id'); /* 取得值 */
+
+					var searchInput = that.find('#searchInput').val();
+
+					/* 點查詢的動作 顯示資料 */
+					if(type == 'mem_ser') {
+						if(searchInput === '') {
+                            popup.alert('系統提示', '請輸入會員帳號');
+                            return false;
+						}
+
+                        $("#voucher_inquiry").addClass('active'); /* 預設點擊  兌獎卷查詢 */
+                        that.find("#mem_ticket").css("display", "block"); /* 顯示按鈕 */
+                        $("#headerPage").css("display", "block"); /* 表格顯示 */
+                        _this.voucherGrid();  /* 兌獎卷查詢表格 */
+
+                        /* 新增時間 排序 大到小 */
+                        $("#mem_sin_Grid").jqGrid('sortGrid', 'ticket_add_time', true, 'DESC');
+                        type = 'voucher_inquiry'; /* 改變 type值 直接搜尋兌換卷 */
+					}
+
+                    /* 兌獎卷查詢  兌獎號碼 */
+                    sendFun.post('{burl}get_mem_list', {type: type, acc: searchInput}, {
+                        onSuccess: function(res){
+                            if (res.list.length > 0) {
+
+                                jgrid.clearCurrent();
+
+                                if(type =='voucher_inquiry') {
+                                    /* 兌獎卷查詢 */
+                                    $.jgrid.gridUnload('#mem_sin_Grid');
+                                    _this.voucherGrid();
+                                    $("#mem_sin_Grid").jqGrid('sortGrid', 'ticket_add_time', true, 'DESC');
+                                } else if(type == 'duijiang_number') {
+                                    /* 兌獎號碼 */
+                                    $.jgrid.gridUnload('#mem_sin_Grid');
+                                    _this.duijiangGrid();
+                                    $("#mem_sin_Grid").jqGrid('sortGrid', 'turn_time', true, 'DESC');
+                                }
+
+                                jgrid.update('#mem_sin_Grid', res.list);
+                            } else {
+                                if(type =='voucher_inquiry') {
+                                    /* 兌獎卷查詢 */
+                                    $.jgrid.gridUnload('#mem_sin_Grid');
+                                    _this.voucherGrid();
+                                    $("#mem_sin_Grid").jqGrid('sortGrid', 'ticket_add_time', true, 'DESC');
+                                } else if(type == 'duijiang_number') {
+                                    /* 兌獎號碼 */
+                                    $.jgrid.gridUnload('#mem_sin_Grid');
+                                    _this.duijiangGrid();
+                                    $("#mem_sin_Grid").jqGrid('sortGrid', 'turn_time', true, 'DESC');
+                                }
+                                popup.alert('系統提示', '找不到此會員的資訊，請重新確認。');
+                            }
+                        },
+                        onFail: function(res){
+                            popup.alert(res.title, res.msg);
+                        }
+                    });
+                });
+
+                $('.mem_sin').on('keydown', function(event){
+                    if (event.which == 13) {
+                        _this.login();
+                    }
+                });
+			}
+		};
+		fn.init();
+		return fn;
+	}
+	var hfn = new mem_sin_Fn();
+</script>

@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+body{
+	font-family: 'Microsoft JhengHei', Verdana,Arial,sans-serif;
+}
+
+a:focus{
+  	outline: none;                                  /* for Firefox Google Chrome  */
+  	behavior:expression(this.onFocus=this.blur());  /* for IE */
+}
+
+/* jQuery confirm */
+.jconfirm.jconfirm-material .jconfirm-box { padding: 0; }
+.jconfirm.jconfirm-material .jconfirm-box div.jconfirm-title-c,
+.jconfirm.jconfirm-material .jconfirm-box .btn { font-family: "Microsoft JhengHei"; }
+.jconfirm.jconfirm-material .jconfirm-box div.jconfirm-title-c { background: #e9e9e9; border-radius: 5px 5px 0 0; margin-bottom: 15px; line-height: none; padding: 8px 15px; text-align: center;}
+.jconfirm.jconfirm-material .jconfirm-box div.jconfirm-title-c .jconfirm-title { padding-bottom: 0;  }
+.jconfirm.jconfirm-material .jconfirm-box .jconfirm-buttons { padding-right: 15px; }
+.jconfirm.jconfirm-material .jconfirm-box .jconfirm-buttons button.btn-default:first-child { background: #243a45; color:#fff;}
+.jconfirm.jconfirm-material .jconfirm-box .jconfirm-buttons button.btn-default:first-child:hover { background: #600; }
+.jconfirm .jconfirm-content { font-size: 15px; padding: 0 15px;}
+
+.jconfirm.jconfirm-supervan .jconfirm-bg{ background-color: rgba(0, 0, 0, 0.67);}
+
+/* jqGrid */
+.ui-jqgrid tr.jqgrow td {
+		white-space: normal !important;
+		height:auto;
+		vertical-align:text-top;
+		padding-top:2px;
+}
+.ui-jqgrid tr.myfootrow td {
+    font-weight: bold;
+    overflow: hidden;
+    white-space:nowrap;
+    height: 21px;
+    padding: 0 2px 0 2px;
+    border-top-width: 1px;
+    border-top-color: inherit;
+    border-top-style: solid;
+    background-color:#C4FFFF;
+}
+.ui-jqgrid tr.footrow td {
+    font-weight: bold;
+    overflow: hidden;
+    white-space:nowrap;
+    height: 21px;
+    padding: 0 2px 0 2px;
+    border-top-width: 1px;
+    border-top-color: inherit;
+    border-top-style: solid;
+    background-color:#FFD2D2;
+}

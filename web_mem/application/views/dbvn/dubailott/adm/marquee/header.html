@@ -1,0 +1,284 @@
+<div class="clearfix">
+	<div class="col-xs-6 col-md-4">
+		<div class="input-group">
+			<span class="input-group-addon">會員賬號：</span><input type="text" id="winning_member" class="form-control marquee" required>
+			<span class="input-group-addon">中獎金額</span><input type="text" id="winning_amount" class="form-control marquee" required>
+			<span class="input-group-btn"><input type="button" class="btn btn-warning" id="add_member" value="新增"></span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-3">
+		<form name="excelForm" method="post" enctype="multipart/form-data" class="form-inline">
+			<div class="input-group">
+				<span class="input-group-addon">批量上傳：</span>
+				<span class="input-group-btn">
+					<input type="file" id="excelFile" class="hidden">
+					<input type="text" id="excelFileName" class="form-control" value="尚未選擇檔案.." readonly>
+					<input type="button" id="downloadDemoBtn" class="btn btn-primary" value="EXCEL範本下載">
+					<input type="button" id="excelUploadBtn" class="btn btn-warning" value="上傳">
+				</span>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="marquee_edit">
+	<form id="marqueeForm">
+		<table class="table table-bordered">
+			<tbody>
+			<tr>
+				<td>會員賬號：</td>
+				<td><input type="text" id="winning_member_edit" name="winning_member_edit" class="form-control" readonly></td>
+				<td>中獎金額：</td>
+				<td><input type="text" id="winning_amount_edit" name="winning_amount_edit" class="form-control"  required></td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div id="headerPage" style="margin: 20px 0;">
+	<div class="box-body">
+		<table id="marqueeGrid"></table>
+	</div>
+</div>
+<style>
+	#marquee_edit {
+		position: absolute;
+		top: 40%;
+		left: 15%;
+		display: none;
+	}
+</style>
+<script>
+	var marqueerFn = function(){
+        var _this = this;
+        var that = $(".clearfix");
+		var fn = {
+			initUpload: function(){
+				var _this = this;
+				/* 上傳中獎名單 */
+				$('#excelFile').change(function() {
+					var fileName = $(this).val(); /* 檔案名稱 */
+					var fileAry = fileName.split('\\'); /* 切割字串 \\ */
+					$('#excelFileName').val(fileAry.pop()); /* 顯示檔案名稱 */
+				});
+				/* 點擊上傳檔案 */
+				$('#excelFileName').on('click', function(){
+					$('#excelFile').click();
+				});
+				/* 點擊上傳 */
+				$('#excelUploadBtn').on('click', function(){
+					_this.uploadExcel();
+				});
+				/* EXCEL範本下載 */
+				$('#downloadDemoBtn').on('click', function(){
+					location.href = '{furl}excel/marquee_demo.xlsx';
+				});
+			},
+			/* 上傳期數 並顯示 清單 */
+			uploadExcel: function(){
+				if($("#excelFile").val() === ''){
+					popup.alert('請先選擇檔案', '請選擇上傳名單 Excel 檔案');
+					return false;
+				}
+
+				var data = new FormData($('form[name="excelForm"]')[0]); /* 使用 FormData 物件傳送檔案 */
+				data.append('excelFile', $('#excelFile')[0].files[0]); /* 取得檔案 */
+
+				/* 上傳檔案 顯示中獎會員清單 */
+				sendFun.post('{burl}excel_marque_upload', data, {
+					onSuccess: function(res){
+						open_win('{burl}upload_view_marquee', '', 0.8);
+					}
+				}, true);
+			},
+			/* 表格標題 內容 */
+			initGrid: function(){
+				var colNames = [
+						'會員賬號',
+						'中獎金額',
+						'功能'
+					],
+					colModel = [
+						{ name: 'winning_member', width: 25, align: 'center'},
+						{ name: 'winning_amount', width: 25, align: 'center', formatter: "integer"},
+                        { name: 'system', width: 25, align: 'center',
+                            formatter: function(cellvalue, options, rowObject){
+                                var html = '';
+                                if (rowObject.id !== undefined && rowObject.id != '') {
+                                    html += '<button type="button" class="btn btn-warning" onclick="hfn.marquee_mod(\'marquee_edit\', 900, 300,\''+rowObject.id+'\',\''+rowObject.winning_member+'\',\''+rowObject.winning_amount+'\')">編輯</button> ';
+                                    html += '<button type="button" class="btn btn-danger" onclick="hfn.marquee_del(\'del\', \''+rowObject.id+'\')">刪除</button> ';
+                                }
+                                return html;
+                            }
+                        }
+					];
+
+                jgrid.create('#marqueeGrid', colNames, colModel);
+			},
+			/* 修改跑馬燈 */
+            marquee_mod: function(id, w, h, marquee_id, winning_member, winning_amount){
+                var _this = this;
+
+                $('#marqueeForm input[name="winning_member_edit"]').val(winning_member); /* 中獎會員 */
+                $('#marqueeForm input[name="winning_amount_edit"]').val(addCommas(winning_amount)); /* 中獎金額 */
+
+                $.fancybox({
+                    href: '#' + id,
+                    fitToView: false,
+                    width: w,
+                    height: h,
+                    autoSize: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none',
+                    padding : 0
+                });
+                $('#fancybox-overlay').off().css('cursor', 'default');
+
+                var div = $('<div align="center" style="margin-top: 8px;"></div>'),
+                    btnSend = $('<button type="button" class="btn btn-primary" style="margin: 0 5px;">更新</button>'),
+                    btnCancel = $('<button type="button" class="btn btn-danger" style="margin: 0 5px;">取消</button>');
+
+                /* 更新 */
+                btnSend.on('click',  function(event){
+					_this.marquee_set('mod', marquee_id, winning_member);
+                });
+
+				/* 取消 */
+                btnCancel.on('click', function(){
+                    $.fancybox.close();
+                });
+
+                div.append(btnSend).append(btnCancel);
+                $('.fancybox-wrap').append(div);
+            },
+            /* 刪除跑馬燈 */
+            marquee_del: function(type, marquee_id){
+                var _this = this;
+                popup.confirm('確認刪除?', '確認刪除此會員帳號?', function(){
+                    sendFun.post('{burl}marquee_set', {type:type, id:marquee_id}, {
+                        onSuccess: function(res){
+                            popup.alert(res.title, res.msg, function(){
+                                /* 執行跑馬燈資料 */
+                                _this.get_winning_member();
+                            });
+                        },
+                        onFail: function(res){
+                            popup.alert(res.title, res.msg);
+                        }
+                    });
+                });
+            },
+			/* 取得中獎會員資料 */
+            get_winning_member: function(){
+                sendFun.post('{burl}marquee_set', {type:'qry'}, {
+                    onSuccess: function(res){
+                        jgrid.clearCurrent();
+                        jgrid.update('#marqueeGrid', res.marquee_list);
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+			/* 新增跑馬燈 手動輸入 */
+			marquee_set: function (type, marquee_id, winning_member) {
+                var _this = this,
+                	send = {};
+
+                	/* 判斷是新增的畫面 還是 修改的畫面 */
+                	if(type == 'add') {
+                        send['winning_member'] = that.find('#winning_member').val(); /* 中獎會員 */
+                        send['winning_amount'] = that.find('#winning_amount').val(); /* 中獎金額 */
+
+                        winning_num = send['winning_amount'].replace(/,/g, ""); /* 去除分位符號 */
+
+					} else if(type == 'mod') {
+                        send['winning_member'] = $('#marqueeForm input[name="winning_member_edit"]').val(); /* 中獎會員 */
+                        send['winning_amount'] = $('#marqueeForm input[name="winning_amount_edit"]').val(); /* 中獎金額 */
+
+                        winning_num = send['winning_amount'].replace(/,/g, ""); /* 去除分位符號 */
+                        /* 判斷如果 修改 會員賬號 的欄位 */
+                        if (winning_member != send['winning_member']) {
+                            popup.alert('系統提示', '中獎會員帳號不能修改');
+                            return false;
+                        }
+					}
+
+                /** 驗證空白------------------------------------- */
+                if(send['winning_member'] === '') {
+                    popup.alert('系統提示', '未輸入會員賬號' , function () {
+						type =='add' ? that.find('#winning_member').focus():$('#marqueeForm input[name="winning_member_edit"]').focus();
+
+                    });
+                    return false;
+                } else if(send['winning_amount'] === ''){
+                    popup.alert('系統提示', '未輸入中獎金額', function () {
+                        type =='add' ? that.find('#winning_amount').focus():$('#marqueeForm input[name="winning_amount_edit"]').focus();
+                    });
+                    return false;
+                }
+                /** 驗證空白 End---------------------------------- */
+
+                /* 驗證是否為整數 -----------------------------------*/
+                var re = /^[0-9]*$/;
+                if(!re.test(winning_num)) {
+                    popup.alert('系統提示', '中獎金額，請輸入數字', function () {
+                        type =='add' ? that.find('#winning_amount').focus():$('#marqueeForm input[name="winning_amount_edit"]').focus();
+                    });
+                    return false;
+                } else if(winning_num <= 0) {
+                    popup.alert('系統提示', '中獎金額，不能低於0', function () {
+                        type =='add' ? that.find('#winning_amount').focus():$('#marqueeForm input[name="winning_amount_edit"]').focus();
+                    });
+                    return false;
+                }
+                /*  驗證是否為整數 End------------------------------ */
+
+				/* 跑馬燈設定輸入條件都符合 ，則新增 或修改 */
+                sendFun.post('{burl}marquee_set', {type:type, id:marquee_id, winning_member:send['winning_member'], winning_num:winning_num}, {
+                    onSuccess: function(res){
+                        popup.alert(res.title, res.msg, function () {
+                            $.fancybox.close(); /* 關閉視窗 */
+
+                            /* 把值清空 */
+                            $('input.marquee').each(function() {
+                                $(this).val('');
+                            });
+
+                            /* 執行跑馬燈資料 */
+                            _this.get_winning_member();
+                        });
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+			init: function(){
+				var _this = this;
+					_this.initUpload(); /* 上傳  */
+					_this.initGrid(); /* 表格標題 內容 */
+					_this.get_winning_member(); /* 中獎會員資料 */
+
+				/* 手動新增期數 */
+                that.find("#add_member").on('click', function(){
+                    _this.marquee_set('add'); /* 中獎會員 資料驗證 */
+                });
+
+                /* 開獎日期 排序 大到小 */
+                //$("#marqueeGrid").jqGrid('sortGrid', 'lottery_date', true, 'DESC');
+			}
+		};
+		fn.init();
+		return fn;
+	}
+	var hfn = new marqueerFn();
+
+    /* 處理數字分位符號 */
+    function addCommas(val) {
+        val += "";
+        var arr = val.split(".");
+        var re = /(\d{1,3})(?=(\d{3})+$)/g;
+        return arr[0].replace(re,"$1,") + (arr.length == 2 ? "."+arr[1] : "");
+    }
+</script>

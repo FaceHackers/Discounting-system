@@ -1,0 +1,163 @@
+<div class="clearfix mem_bin">
+	<div class="col-xs-6 col-md-2" id="">
+		<div class="input-group">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-primary cls_child" id="not_yet">未派獎</button>
+				<button type="button" class="btn btn-primary cls_child" id="yet">已派獎</button>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-1">
+		<div class="input-group">
+			<span class="input-group-addon">匯出：</span>
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-info cls_child_btn" id="downloadExcel">匯出EXCEL</button>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-4">
+		<form name="excelForm" method="post" enctype="multipart/form-data" class="form-inline">
+			<div class="input-group">
+				<span class="input-group-addon">派獎上傳：</span>
+				<span class="input-group-btn">
+					<input type="file" id="excelFile" class="hidden">
+					<input type="text" id="excelFileName" class="form-control" value="尚未選擇檔案.." readonly>
+					<input type="button" id="downloadDemoBtn" class="btn btn-primary" value="EXCEL範本下載">
+					<input type="button" id="excelUploadBtn" class="btn btn-warning" value="上傳">
+				</span>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="headerPage"  style="margin: 20px 0;">
+	<div class="box-body">
+		<table id="mem_bingo_grid"></table>
+	</div>
+</div>
+<script>
+    var mem_bingo_Fn = function(){
+        var _this = this;
+        var that = $(".mem_bin");
+        var fn = {
+            initUpload: function(){
+                var _this = this;
+                /* 上傳中獎名單 */
+                $('#excelFile').change(function() {
+                    var fileName = $(this).val(); /* 檔案名稱 */
+                    var fileAry = fileName.split('\\'); /* 切割字串 \\ */
+                    $('#excelFileName').val(fileAry.pop()); /* 顯示檔案名稱 */
+                });
+                /* 點擊上傳檔案 */
+                $('#excelFileName').on('click', function(){
+                    $('#excelFile').click();
+                });
+                /* 點擊上傳 */
+                $('#excelUploadBtn').on('click', function(){
+                    _this.uploadExcel();
+                });
+                /* EXCEL範本下載 */
+                $('#downloadDemoBtn').on('click', function(){
+                    location.href = '{furl}excel/mem_bingo_demo.xlsx';
+                });
+            },
+            /* 上傳期數 並顯示 清單 */
+            uploadExcel: function(){
+                if($("#excelFile").val() === ''){
+                    popup.alert('請先選擇檔案', '請選擇上傳名單 Excel 檔案');
+                    return false;
+                }
+
+                var data = new FormData($('form[name="excelForm"]')[0]); /* 使用 FormData 物件傳送檔案 */
+                data.append('excelFile', $('#excelFile')[0].files[0]); /* 取得檔案 */
+
+                /* 上傳檔案 顯示中獎會員清單 */
+                sendFun.post('{burl}excel_mem_bingo_upload', data, {
+                    onSuccess: function(res){
+                        open_win('{burl}upload_view_mem_bingo', '', 0.8);
+                    }
+                }, true);
+            },
+            /**
+             *  匯出 Excel
+             *  get_data 取得 表格資料
+             */
+            downloadExcel: function(type){
+                $('#downloadExcel').on('click', function(){
+                    var get_data = jgrid.getData('#mem_bingo_grid'); /* 取得表格資料 */
+                    var get_type= that.find('.active').attr('id'); /* 取得會員名單 */
+                    sendFun.post('{burl}downloadExcel_type', {get_data: get_data, type: get_type}, {
+                        onSuccess: function(res){
+                            var download = $('<a>').attr({
+                                'href': res.file, /* 檔案內容 */
+                                'download': res.fileName /* 檔案名稱 */
+                            });
+
+                            $('body').append(download);
+                            download[0].click();
+                            download.remove();
+                        },
+                        onFail: function(res){
+                            popup.alert(res.title, res.msg);
+                        }
+                    });
+                });
+            },
+            initGrid: function(){
+                var colNames = [
+                        '轉號日期',
+                        '賬號',
+                        '兌獎期數',
+                        '可獲得彩金',
+                        '轉出號碼',
+						'派獎時間'
+                    ],
+                    colModel = [
+                        { name: 'turn_time', width: 25, align: 'center'},
+                        { name: 'bingo_acc', width: 25, align: 'center'},
+                        { name: 'mem_num', width: 25, align: 'center'},
+                        { name: 'receive_bonus', width: 25, align: 'center', formatter: "integer"},
+                        { name: 'turn_num', width: 25, align: 'center'},
+                        { name: 'distribute_time', width: 25, align: 'center'}
+                    ];
+
+                jgrid.create('#mem_bingo_grid', colNames, colModel);
+            },
+			/* 取得中獎會員資料 */
+            get_bingo_mem_data: function(type){
+                sendFun.post('{burl}get_bingo_mem_data', {type:type}, {
+                    onSuccess: function(res){
+                        jgrid.clearCurrent();
+                        jgrid.update('#mem_bingo_grid', res.bingo_list);
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+            init: function(){
+                var _this = this;
+                _this.initGrid();
+                _this.initUpload(); /* 上傳  */
+				_this.get_bingo_mem_data('not_yet'); /* 執行中獎會員資料 */
+				_this.downloadExcel();
+
+                $("#not_yet").addClass('active'); /* 加入 active 元素*/
+
+                $('.cls_child').on('click', function(){
+                    $(this).siblings().removeClass('active'); /* 查找 此元素 並移除  active 元素*/
+                    $(this).addClass('active'); /* 加入 active 元素*/
+
+                    var type = $(this).attr('id'); /* 取得值 */
+
+                    _this.get_bingo_mem_data(type); /* 執行中獎會員資料 */
+                });
+
+				/* 轉號日期 排序 大到小 */
+                $("#mem_bingo_grid").jqGrid('sortGrid', 'turn_time', true, 'DESC');
+            }
+        };
+        fn.init();
+        return fn;
+    }
+    var hfn = new mem_bingo_Fn();
+</script>

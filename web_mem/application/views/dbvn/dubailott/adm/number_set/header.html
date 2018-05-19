@@ -1,0 +1,428 @@
+<div class="clearfix">
+	<div class="col-xs-6 col-md-5">
+		<div class="input-group">
+			<span class="input-group-addon">期數：</span><input type="text" id="number_periods" class="form-control periods" required>
+			<span class="input-group-addon">開獎日期</span><input type="text" id="lottery_date" placeholder="yyyy-mm-dd" maxlength="10" class="form-control periods">
+			<span class="input-group-addon">開獎號碼</span><input type="text" id="winning_numbers" placeholder="01,02,03,04,05,06" class="form-control periods">
+			<span class="input-group-btn"><input type="button" class="btn btn-warning" id="add_number" value="新增"></span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-3">
+		<form name="excelForm" method="post" enctype="multipart/form-data" class="form-inline">
+			<div class="input-group">
+				<span class="input-group-addon">批量上傳：</span>
+				<span class="input-group-btn">
+					<input type="file" id="excelFile" class="hidden">
+					<input type="text" id="excelFileName" class="form-control" value="尚未選擇檔案.." readonly>
+					<input type="button" id="downloadDemoBtn" class="btn btn-primary" value="EXCEL範本下載">
+					<input type="button" id="excelUploadBtn" class="btn btn-warning" value="上傳">
+				</span>
+			</div>
+		</form>
+	</div>
+	<div class="col-xs-6 col-md-4">
+		<div class="input-group">
+			<span class="input-group-addon">計算存款開始時間：</span><input type="text" class="form-control" id="deposit_start" readonly>
+			<span class="input-group-addon">結束時間</span><input type="text"  class="form-control" id="deposit_end">
+			<span class="input-group-btn"><input type="button" class="btn btn-warning" id="deposit_range_mod" value="設定"></span>
+		</div>
+	</div>
+</div>
+<div id="num_edit">
+	<form id="numForm">
+		<table class="table table-bordered">
+			<tbody>
+			<tr>
+				<td>期數：</td>
+				<td><input type="text" id="number_periods_edit" name="number_periods_edit" class="form-control" required></td>
+				<td>開獎日期：</td>
+				<td><input type="text" id="lottery_date_edit" name="lottery_date_edit" placeholder="yyyy-mm-dd" maxlength="10" class="form-control"></td>
+				<td>開獎號碼：</td>
+				<td><input type="text" id="winning_numbers_edit" name="winning_numbers_edit" placeholder="01,02,03,04,05,06" class="form-control" autocomplete="off"></td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div id="headerPage" style="margin: 20px 0;">
+	<div class="box-body">
+		<table id="numGrid"></table>
+	</div>
+</div>
+<style>
+	#num_edit {
+		position: absolute;
+		top: 40%;
+		left: 5%;
+		display: none;
+	}
+</style>
+<script>
+	var numberFn = function(){
+        var _this = this;
+        var that = $(".clearfix"),
+        	TimeNow= new Date(),
+            yyyy = TimeNow.toLocaleDateString().slice(0,4),
+            MM = (TimeNow.getMonth()+1<10 ? '0' : '')+(TimeNow.getMonth()+1),
+            dd = (TimeNow.getDate()<10 ? '0' : '')+TimeNow.getDate(),
+            today = yyyy + '-' + MM + '-' + dd;
+		var fn = {
+			initUpload: function(){
+				var _this = this;
+				/* 上傳期數 */
+				$('#excelFile').change(function() {
+					var fileName = $(this).val(); /* 檔案名稱 */
+					var fileAry = fileName.split('\\'); /* 切割字串 \\ */
+					$('#excelFileName').val(fileAry.pop()); /* 顯示檔案名稱 */
+				});
+				/* 點擊上傳檔案 */
+				$('#excelFileName').on('click', function(){
+					$('#excelFile').click();
+				});
+				/* 點擊上傳 */
+				$('#excelUploadBtn').on('click', function(){
+					_this.uploadExcel();
+				});
+				/* EXCEL範本下載 */
+				$('#downloadDemoBtn').on('click', function(){
+					location.href = '{furl}excel/excelDemo.xlsx';
+				});
+			},
+			/* 上傳期數 並顯示 清單 */
+			uploadExcel: function(){
+				if($("#excelFile").val() === ''){
+					popup.alert('請先選擇檔案', '請選擇上傳名單 Excel 檔案');
+					return false;
+				}
+
+				var data = new FormData($('form[name="excelForm"]')[0]); /* 使用 FormData 物件傳送檔案 */
+				data.append('excelFile', $('#excelFile')[0].files[0]); /* 取得檔案 */
+
+				/* 上傳檔案 顯示期數清單 */
+				sendFun.post('{burl}excel_periods_upload', data, {
+					onSuccess: function(res){
+						open_win('{burl}upload_view_num', '', 0.8);
+					}
+				}, true);
+			},
+			/* 表格標題 內容 */
+			initGrid: function(){
+				var colNames = [
+						'期數',
+						'開獎日期',
+						'開獎號碼',
+						'功能'
+					],
+					colModel = [
+						{ name: 'number_periods', width: 25, align: 'center'},
+						{ name: 'lottery_date', width: 25, align: 'center'},
+						{ name: 'winning_numbers', width: 25, align: 'center'},
+                        { name: 'system', width: 25, align: 'center',
+                            formatter: function(cellvalue, options, rowObject){
+                                var html = '';
+                                if (rowObject.id !== undefined && rowObject.id != '' &&  rowObject.chk_open != 1) {
+                                    html += '<button type="button" class="btn btn-warning" onclick="hfn.num_mod(\'num_edit\', 900, 300,\''+rowObject.id+'\',\''+rowObject.number_periods+'\',\''+rowObject.lottery_date+'\',\''+rowObject.winning_numbers+'\')">編輯</button> ';
+                                }
+                                return html;
+                            }
+                        }
+					];
+
+                jgrid.create('#numGrid', colNames, colModel);
+			},
+			/* 修改期數 */
+            num_mod: function(id, w, h, num_id, number_periods, lottery_date, winning_numbers){
+                var _this = this,
+                     date = lottery_date.substr(0, 10);
+                $('#numForm input[name="number_periods_edit"]').val(number_periods);
+                $('#numForm input[name="lottery_date_edit"]').val(date);
+                $('#numForm input[name="winning_numbers_edit"]').val(winning_numbers);
+
+                /* 判斷是不是大於今天日期 就把開獎號碼 disabled */
+                (date > today) ?$('#numForm input[name="winning_numbers_edit"]').attr('disabled', 'disabled'):
+								$('#numForm input[name="winning_numbers_edit"]').removeAttr('disabled', 'disabled');
+
+                $.fancybox({
+                    href: '#' + id,
+                    fitToView: false,
+                    width: w,
+                    height: h,
+                    autoSize: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none',
+                    padding : 0
+                });
+                $('#fancybox-overlay').off().css('cursor', 'default');
+
+                var div = $('<div align="center" style="margin-top: 8px;"></div>'),
+                    btnSend = $('<button type="button" class="btn btn-primary" style="margin: 0 5px;">更新</button>'),
+                    btnCancel = $('<button type="button" class="btn btn-danger" style="margin: 0 5px;">取消</button>');
+
+                /* 更新 */
+                btnSend.on('click',  function(event){
+					_this.number_set('mod', num_id);
+                });
+
+				/* 取消 */
+                btnCancel.on('click', function(){
+                    $.fancybox.close();
+                });
+
+                div.append(btnSend).append(btnCancel);
+                $('.fancybox-wrap').append(div);
+            },
+			/* 取得期數資料 */
+            getNumData: function(){
+                sendFun.post('{burl}number_set', {type:'qry'}, {
+                    onSuccess: function(res){
+                        jgrid.clearCurrent();
+                        jgrid.update('#numGrid', res.num_list);
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+			/* 新增期數 手動輸入 */
+			number_set: function (type, num_id) {
+                var _this = this,
+                	send = {};
+
+                	/* 判斷是新增的畫面 還是 修改的畫面 */
+                	if(type == 'add') {
+                        send['number_periods'] = that.find('#number_periods').val(); /* 期數 */
+                        send['lottery_date'] = that.find('#lottery_date').val(); /* 開獎日期 */
+                        send['winning_numbers'] = that.find('#winning_numbers').val(); /* 開獎號碼 */
+
+						if(send['winning_numbers'] != '') {
+							if(send['lottery_date'] > today) {
+                                popup.alert('系統提示', '開獎日期大於今天，不能輸入開獎號碼', function () {
+                                    that.find('#winning_numbers').focus();
+                                });
+                                return false;
+							}
+						}
+					} else if(type == 'mod') {
+                        send['number_periods'] = $('#numForm input[name="number_periods_edit"]').val(); /* 期數 */
+                        send['lottery_date'] = $('#numForm input[name="lottery_date_edit"]').val(); /* 開獎日期 */
+                        send['winning_numbers'] = $('#numForm input[name="winning_numbers_edit"]').val(); /* 開獎號碼 */
+					}
+
+                /** 驗證空白------------------------------------- */
+                if(send['number_periods'] === '') {
+                    popup.alert('系統提示', '未輸入期數' , function () {
+						type =='add' ? that.find('#number_periods').focus():$('#numForm input[name="number_periods_edit"]').focus();
+
+                    });
+                    return false;
+                } else if(send['lottery_date'] === ''){
+                    popup.alert('系統提示', '未輸入開獎日期', function () {
+                        type =='add' ? that.find('#lottery_date').focus():$('#numForm input[name="lottery_date_edit"]').focus();
+                    });
+                    return false;
+                }
+                /** 驗證空白 End---------------------------------- */
+
+                /** 驗證日期格式 是否正確 ---------------------------*/
+                var lottery_date = isValidDate(send['lottery_date']);
+
+                if(lottery_date === false) {
+                    popup.alert('系統提示', '開獎日期格式，錯誤', function () {
+                        type =='add' ? that.find('#lottery_date').focus():$('#numForm input[name="lottery_date_edit"]').focus();
+                    });
+                    return false;
+                }
+                /** 驗證日期格式 End------------------------------- */
+
+                /** 驗證開獎號碼格式-------------------------------- */
+                if(send['winning_numbers']) {
+                    var numbers_str = send['winning_numbers'].split(","),
+                        numbers_len = numbers_str.length,
+                        re = /^\d{2},\d{2},\d{2},\d{2},\d{2},\d{2}$/;
+
+					/* 驗證輸入 數字 是否介於 01~45 */
+                    for (i = 0; i < numbers_len; i++) {
+                        var str = parseInt(numbers_str[i]);
+
+                        if(str > 45 || str <= 0) {
+                            popup.alert('系統提示', '開獎号碼，請輸入介於01~45号', function () {
+                                type =='add' ? that.find('#winning_numbers').focus():$('#numForm input[name="winning_numbers_edit"]').focus();
+                            });
+                            return false;
+                        } else if (!re.test(send['winning_numbers'])) {
+                            popup.alert('系統提示', '開獎号碼，請確認輸入格式是否正確!!', function () {
+                                type =='add' ? that.find('#winning_numbers').focus():$('#numForm input[name="winning_numbers_edit"]').focus();
+                            });
+                            return false;
+                        }
+                    }
+
+                    /** 驗證開獎號碼數字重複 */
+                    var num_re = isRepeat(numbers_str);
+                    if(num_re === true) {
+                        popup.alert('系統提示', '開獎号碼，有重複', function () {
+                            type =='add' ? that.find('#winning_numbers').focus():$('#numForm input[name="winning_numbers_edit"]').focus();
+                        });
+                        return false;
+                    }
+
+					/* 判斷只能輸六6個號碼 */
+                    if(numbers_len > 6 || numbers_len < 6) {
+                        popup.alert('系統提示', '開獎号碼，輸入超過六個号碼，或不足六個号碼', function () {
+                            type =='add' ? that.find('#winning_numbers').focus():$('#numForm input[name="winning_numbers_edit"]').focus();
+                        });
+                        return false;
+                    }
+                }
+				/* 驗證開獎號碼End--------------------------------- */
+
+				/* 期數設定輸入條件都符合 ，則新增 或修改 */
+                sendFun.post('{burl}number_set', {type:type, id:num_id, send:send}, {
+                    onSuccess: function(res){
+                        popup.alert(res.title, res.msg, function () {
+                            $.fancybox.close(); /* 關閉視窗 */
+
+							/* 把值清空 */
+                            $('input.periods').each(function() {
+                                $(this).val('');
+                            });
+
+                            /* 執行期數資料 */
+                            _this.getNumData();
+                        });
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+			/* 存款區間 */
+            get_deposit_range: function () {
+                sendFun.post('{burl}get_deposit_range', {type: 'qry'}, {
+                    onSuccess: function(res){
+                        var deposit_range = res.list,
+                            deposit_start = deposit_range[0].deposit_start.substr(0, 10),
+                            deposit_end = deposit_range[0].deposit_end.substr(0, 10);
+
+                        	that.find("#deposit_start").val(deposit_start); /* 存款開始時間 */
+                        	that.find("#deposit_end").val(deposit_end); /* 存款結束時間 */
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+			/* 更新限制註冊天數 */
+            deposit_range_mod: function () {
+                var _this = this;
+                var send = {};
+                	send['deposit_end']  = that.find('#deposit_end').val(); /* 取得結束時間 */
+
+				/* 驗證空白 */
+                if (send['deposit_end'] === '') {
+                    popup.alert('系統提示', '結束時間不能空白');
+                    that.find('#deposit_end').focus();
+                    return false;
+                }
+
+                /**
+				 * 驗證日期格式 是否正確
+				 * 不能修改 今天以前的日期
+				 * */
+                var deposit_end = isValidDate(send['deposit_end']);
+
+				if(deposit_end === false) {
+                    popup.alert('系統提示', '結束時間格式，錯誤', function () {
+                        that.find('#deposit_end').focus();
+                    });
+                    return false;
+                } else if(today > send['deposit_end']) {
+                    popup.alert('系統提示', '不能修改低於今天的日期', function () {
+                        that.find('#deposit_end').focus();
+                    });
+                    return false;
+				}
+
+                /** 更改存款區間
+                 * type 類別
+                 * send 結束時間
+                 */
+                sendFun.post('{burl}get_deposit_range', {type: 'mod', send: send}, {
+                    onSuccess: function(res){
+                        popup.alert(res.title, res.msg);
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+			domEvent: function () {
+			    /* 日期格式 新增*/
+				that.find('#lottery_date').datepicker({
+                    dateFormat: "yy-mm-dd"
+				});
+
+                /* 存款結束時間 新增*/
+                that.find('#deposit_end').datepicker({
+                    dateFormat: "yy-mm-dd"
+                });
+		
+				/* 日期格式 修改*/
+                $('#numForm input[name="lottery_date_edit"]').datepicker({
+                	dateFormat: 'yy-mm-dd'
+            	});
+            },
+			init: function(){
+				var _this = this;
+					$(window).off('resize');
+					_this.initUpload(); /* 上傳  */
+					_this.initGrid(); /* 表格標題 內容 */
+					_this.domEvent(); /* 載入 日期格式 */
+					_this.getNumData(); /* 期數資料 */
+					_this.get_deposit_range(); /* 存款區間 */
+
+				/* 手動新增期數 */
+                that.find("#add_number").on('click', function(){
+                    _this.number_set('add'); /* 驗證期數 */
+                });
+
+				/* 更新存款區間 */
+                that.find("#deposit_range_mod").on('click', function() {
+                    _this.deposit_range_mod();
+                });
+
+                /* 開獎日期 排序 大到小 */
+                $("#numGrid").jqGrid('sortGrid', 'lottery_date', true, 'DESC');
+			}
+		};
+		fn.init();
+		return fn;
+	}
+	var hfn = new numberFn();
+
+	/** 驗證日期 合法 */
+    function isValidDate(date) {
+        var matches = /^(\d{4})[-](\d{1,2})[-](\d{1,2})$/.exec(date);
+
+        if (matches == null) return false;
+        var m = matches[2] - 1;
+        var d = matches[3];
+        var y = matches[1];
+        var composedDate = new Date(y, m, d);
+        return 	composedDate.getDate() == d &&
+				composedDate.getMonth() == m &&
+				composedDate.getFullYear() == y;
+    }
+
+	/* 判斷開獎號碼 是否有重複 */
+    function isRepeat(arr) {
+        var hash = {};
+        for(var i in arr) {
+            if(hash[arr[i]])
+                return true;
+            	hash[arr[i]] = true;
+        }
+        return false;
+    }
+</script>

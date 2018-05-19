@@ -1,0 +1,114 @@
+<!DOCTYPE>
+<html>
+	<head>
+		{inc_back_head}
+	</head>
+	<body>
+		<div class="box-body">
+			<table id="uploadGrid"></table>
+		</div>
+	</body>
+</html>
+<script>
+	var uploadFn = function(){
+		var pdata = $.parseJSON('{list}'); /* 取得內容  解析 json 字串*/
+		var fn = {
+		    /* 上傳期數設定 新增到資料庫 */
+			sendUpload: function(){
+				var data = jgrid.getData('#uploadGrid');
+				for (var i in data) {
+				    /* 判斷是否為上傳資料 已有上傳資料 把資料 delete */
+					if (data[i].status != 0) {
+						delete data[i];
+					}
+				}
+
+				/* 上傳中獎會員名單 */
+				sendFun.post('{burl}excel_bingo_mem_success', {data: data}, {
+					onSuccess: function(res){
+						popup.alert(res.title, res.msg, function(){
+                            parent.hfn.get_bingo_mem_data('not_yet'); /* 抓取上一層的資料 */
+							parent.$.fancybox.close();
+						});
+					},
+					onFail: function(res) {
+                        popup.alert(res.title, res.msg);
+                    }
+				});
+			},
+			initFancy: function(){
+				var _this = this;
+				if (parent.$('.fancybox-wrap #fancy_div').length == 0) {
+					parent.$('.fancybox-wrap').append('<div id="fancy_div" align="center" style="margin-top:10px"></div>');
+					parent.$('#fancy_div').append('<input type="button" class="btn btn-primary fancy_btn" id="btn_add" value="上傳" style="margin: 5px;">');
+					parent.$('#fancy_div').append('<input type="button" class="btn btn-danger fancy_btn" id="btn_cancel" value="取消" style="margin: 5px;">');
+					
+					parent.$('#btn_add').on('click', function () {
+						_this.sendUpload();
+					});
+					parent.$('#btn_cancel').on('click', function () {
+						parent.$.fancybox.close();
+					});
+				}
+			},
+			init: function(){
+				var _this = this;
+				_this.initFancy();
+				var colNames = [
+						'會員帳號',
+						'期數',
+						'彩金',
+						'轉出號碼',
+						'派發時間',
+						'狀態'
+					],
+					colModel = [
+						{ name: 'mem_bingo', width: 25, align: 'center'},
+						{ name: 'mem_num', width: 25, align: 'center'},
+                        { name: 'receive_bonus', width: 25, align: 'center', formatter: "integer"},
+                        { name: 'bingo_number', width: 25, align: 'center'},
+                        { name: 'distribute_time', width: 25, align: 'center'},
+						{ name: 'status', width: 25, align: 'center',
+							formatter: function(cellvalue, options, rowObject){
+								var html = '';
+								switch(cellvalue){
+									case 0:
+										html = '<span class="label label-success">可派獎</span>';
+										break;
+									case 1:
+										html = '<span class="label label-danger">會員帳號、期數、彩金、轉出號碼、派發時間不能空</span>';
+									break;
+                                    case 2:
+                                        html = '<span class="label label-danger">無此會員，請確認上傳會員名單是否正確</span>';
+                                        break;
+                                    case 3:
+                                        html = '<span class="label label-danger">彩金只能是數字或不能小於0</span>';
+                                        break;
+                                    case 4:
+                                        html = '<span class="label label-danger">派發時間錯誤</span>';
+                                        break;
+                                    case 5:
+                                        html = '<span class="label label-danger">找不到符合的帳號、期數、彩金資料</span>';
+                                        break;
+                                    case 6:
+                                        html = '<span class="label label-danger">彩金已派獎</span>';
+                                        break;
+                                    case 7:
+                                        html = '<span class="label label-danger">已有上傳資料</span>';
+                                        break;
+								}
+								return html;
+							}
+						}
+					];
+
+				jgrid.create('#uploadGrid', colNames, colModel);
+				jgrid.update('#uploadGrid', pdata);
+			}
+		};
+		fn.init();
+		return fn;
+	}
+
+	var ufn = new uploadFn();
+</script>

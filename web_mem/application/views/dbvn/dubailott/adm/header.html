@@ -1,0 +1,46 @@
+
+<div class="navbar navbar-default navbar-static-top">
+	<div class="navbar-inner">
+	  	<div class="container-fluid">
+	    	<a href="#" class="navbar-brand">{act_name}</a>
+	    	<div class="nav-collapse">
+		      	<ul class="nav navbar-nav">
+		        	<li id="li_number_set" class="cls_menu">
+		        		<a href="#" onclick="changePage('number_set')"> 期數設定 </a>
+		        	</li>
+					<li id="li_mem_list" class="cls_menu">
+						<a href="#" onclick="changePage('mem_list')"> 會員 </a>
+					</li>
+					<li id="li_mem_ticket_set" class="cls_menu">
+						<a href="#" onclick="changePage('mem_ticket_set')"> 手動新增 </a>
+					</li>
+					<li id="li_marquee" class="cls_menu">
+						<a href="#" onclick="changePage('marquee')"> 跑馬燈 </a>
+					</li>
+		        </ul>
+	    	</div>
+	  	</div>
+	</div>
+</div>
+
+<div id="page"></div>
+
+<script>
+	function changePage(page){
+		$(".cls_menu").each(function(){
+			$(this).removeClass("active");
+		});
+
+		$("#li_" + page).addClass("active");
+
+		sendFun.post('{burl}toView/' + page, {}, {
+			onSuccess: function(res){
+				$("#page").html(res.view);
+			},
+			onFail: function(res){
+				popup.alert(res.title, res.msg);
+			}
+		});
+	}
+	changePage('number_set');
+</script>

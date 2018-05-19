@@ -1,0 +1,104 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="robots" content="noindex,NOFOLLOW"/>
+		<title> {act_name} 管理 </title>
+		{inc_back_head}
+	</head>
+	<body>
+		<div id="body" align="center">
+			<div id="loginDiv" class="container">
+				<div class="row">
+					<div class="well">
+						<legend> {act_name} 管理 </legend>
+						<div class="form-horizontal">
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-8">
+									<input type="text" id="acc" class="form-control cls_input" placeholder="帳號">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-8">
+									<input type="password" id="pwd" class="form-control cls_input" placeholder="密碼">
+								</div>
+							</div>
+							<div class="form-group">
+								<button type="button" id="loginBtn" class="btn btn-lg btn-primary">Login</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
+<style>
+
+	#loginDiv.container {
+		margin-top: 180px;
+	}
+
+	#loginDiv .row {
+		width: 45%;
+	}
+
+	#loginBtn {
+		width: 200px;
+	}
+
+</style>
+
+<script>
+
+	var loginFn = function(){
+		var fn = {
+			login: function(){
+				var acc = $('#acc').val();
+				var pwd = $('#pwd').val();
+				if (!acc) {
+					popup.alert('輸入錯誤', '尚未輸入帳號');
+					return false;
+				} else if(!pwd) {
+					popup.alert('輸入錯誤', '尚未輸入密碼');
+					return false;
+				}
+
+				sendFun.post('{burl}adm_login', {acc: $('#acc').val(), pwd: $('#pwd').val()}, {
+					onSuccess: function(res){
+						$('#body').html(res.view);
+					},
+					onFail: function(res){
+						switch(res.code) {
+							case 500:
+							case 501:
+								popup.alert(res.title, res.msg);
+								break;
+							default:
+								popup.alert('系統錯誤', '發生未知錯誤，請通報系統人員，謝謝');
+								break;
+						}
+					}
+				});
+			},
+			init: function(){
+				var _this = this;
+
+				$('#acc').focus();
+				$('#loginBtn').on('click', function(){ 
+					_this.login();
+				});
+
+				$('#loginDiv').on('keydown', function(event){
+					if (event.which == 13) {
+						_this.login();
+					}
+				});
+			}
+		};
+		fn.init();
+	}
+
+	var lfn = new loginFn();
+</script>

@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{act_title}</title>
+	<meta name="keywords" content="{meta_key}">
+	<meta name="description" content="{meta_des}">
+	{inc_head}
+	<link rel="stylesheet" type="text/css" href="{furl}css/reset.css">
+ 	<link rel="stylesheet" href="{furl}js/scrollbar/jquery.mCustomScrollbar.min.css">
+	<link rel="stylesheet" type="text/css" href="{furl}css/custom.css">
+</head>
+<body >
+<div class="total_wrap">
+	<!--  倒數期數  -->
+    <div class="float_box">
+	  <div >
+	     <span>Thời gian còn lại</span>
+	     <span id="reciprocal"></span>
+	  </div>
+	  <div class="float_txt" id="periods">
+	     <div>Ngày mở thưởng<span id="lottery_date"></span></div>
+	     <div >kỳ <span id="number_periods"></span></div>
+	  </div>
+    </div>
+	<!--  倒數期數 END  -->
+    <div class="float_box2">
+       <a href="http://www.322722.com/main/ot/About/95" target="_blank">
+    	  <img src="{furl}css/images/xem ngay.png"/>
+       </a>
+    </div>
+<div class="pc_wrap">
+<header class="">
+	<div class="logo">
+	   <a href="{os_link}" target="_black"><img src="{furl}css/images/logo.png" /></a>
+	</div>
+	<div class="menu_btn">
+		<a href="{os_link}" target="_blank" class="all_a"><span>Trang Chủ</span></a>
+		<a href="#" target="_blank" class="all_a" onclick="cs()"><span>CSKH 24/7</span></a>
+	</div>
+</header>
+
+<section class="">
+	<!-- 網頁版 跑馬燈 -->
+    <div class="box01">
+    	 <div>Danh sách<br>trúng thưởng</div>
+		<!--<div id="marquee">Chúc mừng hội viên XXX trúng thưởng 888,000 VND,…</div>-->
+		<div id="marquee"></div>
+    	 <div><img src="{furl}css/images/title.png"/></div>
+    </div>
+    <div class="box02">
+    	<div class=""><img src="{furl}css/images/xo.png"/></div>
+    	<div class="">
+			<!-- 網頁版 歷史紀錄 -->
+    		<a href="javascript:void(0)" class="index_a data_btn">
+    		   <span>Kiểm tra thông tin</span>
+    		</a>
+			<!-- 網頁版 規則說明 -->
+    		<a href="javascript:void(0)" class="index_a info_btn">
+    		   <span>Nội dung khuyến mãi</span>
+    		</a>
+    	</div>
+		<!-- 網頁版 會員資料顯示 -->
+    	<div class="mem_data" style="display: none">
+	   	   <!--Hội viên <span>XXX</span> thân mến! Chào mừng bạn đến với DUBAI VIETLOTT<br>-->
+	   	   <!--Bạn có  <span>XXX</span> vé số chưa nhận，bấm【Nhận vé số】để lấy các số trong vé số của bạn-->
+	   </div>
+    </div>
+
+    <!-- 文字資訊區塊 -->
+	<div class="txt_box ">
+	    <!-- 彩球 -->
+	    <div class="ball_box step-test">
+	       <!--<img src="{furl}css/images/ball_m.gif"/>-->
+	    </div>
+		<!-- 網頁版 請選曲張數 -->
+	    <div class="input_box">
+	    	<div class="list_l">
+	    	   <select name="ticketnum" id="ticketnum">
+				   <!--　　<option class="">Chọn số vé số muốn nhận</option>-->
+					  <!--<option>Chọn số vé số muốn nhận</option>-->
+					  <!--<option>Chọn số vé số muốn nhận</option>-->
+					  <!--<option>Chọn số vé số muốn nhận</option>-->
+	    	   </select>
+	    	</div>
+	    	<div class="list_r">
+			<!-- 轉號碼 -->
+	    	   <a href="javascript:void(0)" class="index_b turn_number">
+	    	     <span>Nhận vé số</span>
+	    	   </a>
+	    	</div>
+	    </div>
+			 <!-- 請選曲張數 End -->
+	    <!-- 網頁版 轉球號碼 -->
+	    <div class="ball_box2 mCustomScrollbar" style="display: none;height: 246px;">
+	    	<table border="0" cellpadding="0" cellspacing="0" class="tab_box">
+               <tr class="ball_num" style="display: none">
+               	  <td class="topic_bg">Thứ tự vé số</td>
+               	  <td class="topic_bg2" colspan="6">Mã số của vé số</td>
+               </tr>
+					<!--tr>-->
+						<!--<td>Vé số thứ 1</td>-->
+						<!--<td class="ball_td"><img src="{furl}css/images/ball_5.png"/></td>-->
+						<!--<td class="ball_td"><img src="{furl}css/images/ball_14.png"/></td>-->
+						<!--<td class="ball_td"><img src="{furl}css/images/ball_22.png"/></td>-->
+						<!--<td class="ball_td"><img src="{furl}css/images/ball_34.png"/></td>-->
+						<!--<td class="ball_td"><img src="{furl}css/images/ball_37.png"/></td>-->
+						<!--<td class="ball_td"><img src="{furl}css/images/ball_47.png"/></td>-->
+					<!--</tr>-->
+	    	</table>
+	    </div>
+		<!-- 網頁版 轉球號碼 END -->
+	</div>  <!-- end txt_box -->
+	<!-- 頁尾說明 -->
+	<div class="f_box">
+	  <ul>
+	    <li>1.Hệ thống sẽ tạm ngừng phát vé số trong thời gian từ 17:00 -19:00 các ngày mở thưởng của xổ số Vietlott 
+	    </li>
+	    <li>
+		 2.Kết quả quay thưởng minh bạch và được căn cứ cuối cùng dựa theo trang chủ của xổ số Vietlott Mega6/45
+		</li>
+	  </ul>
+	</div>
+	<!-- 頁尾說明 END-->
+</section>
+</div><!-- pc_wrap wrap end -->
+</div><!-- total wrap end -->
+
+<!-- phone wrap end -->
+<div class="phone_wrap">
+<!-- logo_wrap -->
+<div class="logo_box">
+	<div class="p_logo">
+	   <a href="{os_link}" target="_black">
+	     <img src="{furl}css/images/logo_phone.png"/>
+	   </a>
+       <span><img src="{furl}css/images/p_logo02.png"/></span>
+	</div>
+	<div class="p_menu">
+		<a href="{os_link}" target="_blank" class="">
+		  <span>Trang Chủ</span>
+		</a>
+		<a href="#" target="_blank" class="" onclick="cs()">
+		  <span>CSKH 24/7</span>
+		</a>
+	</div>
+</div>
+<section>
+	<!-- 手機板 跑馬燈 -->
+	<div class="marquee_box">
+		<span>Danh sách<br>trúng thưởng</span>
+		<!--<span><marquee>Chúc mừng hội viên XXX trúng thưởng 88</marquee></span>-->
+		<span id="mobile_marquee" style="width: 72%"></span>
+	</div>
+	<!-- 手機板 跑馬燈  END-->
+	<!-- 手機板 中間按鈕 -->
+	<div class="phone_menu ">
+		<a href="javascript:void(0)" class="index_a data_btn">
+    	  <span>Kiểm tra thông tin</span>
+    	</a>
+		<a href="javascript:void(0)" class="index_a info_btn_p">
+		  <span>Nội dung khuyến mãi</span>
+		</a>
+	 </div>
+	 <!-- 手機板 會員資訊 -->
+     <div class="phone_txt" style="display: none">
+ 	   <!--Hội viên <span>XXX</span> thân mến! Chào mừng bạn-->
+ 	   <!--đến với DUBAI VIETLOTT<br><br>-->
+   	   <!--Bạn có  <span>XXX</span> vé số chưa nhận，bấm【Nhận vé số】để lấy các số trong vé số của bạn-->
+     </div>
+     <!-- 手機動畫區塊 -->
+     <div class="phone_keno">
+       <div class="clearfix">
+	     	<div class="keno_ball step-test">
+	     	  <!-- <img src="assets/css/images/ball_m.gif"/> -->
+	     	</div>
+	     	<!-- 右側按鈕 -->
+	     	<div class="keno_btn">
+	     		<div class="list_l">
+		    	   <select name="mobile_select" id="mobile_select">
+		    	      <!--<option class="">Lựa chọn số vé</option>-->
+		    	   </select>
+		    	</div>
+				<!-- 手機板 點選轉號碼按鈕 -->
+		    	<div class="list_r">
+		    	  <a href="javascript:void(0)" class="index_a mobile_turn">Nhận vé số</a>
+		    	</div>
+	     	</div>
+       </div>
+     	<!-- 手機 球_表格 -->
+        <div class="tab_ball">
+			<div class="mobile_ball">
+				<div class="tab_topic" style="display: none">Mã số của vé số</div>
+			</div>
+
+        	<!--<div>Vé số thứ 1</div>-->
+        	<!--<div>-->
+                <!--<ul>-->
+                  <!--<li><img src="assets/css/images/g_5.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_14.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_22.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_34.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_37.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_47.png"/></li>-->
+                <!--</ul>-->
+        	<!--</div>-->
+        	<!--<div>Vé số thứ 2</div>-->
+        	<!--<div>-->
+                <!--<ul>-->
+                  <!--<li><img src="assets/css/images/g_5.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_14.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_22.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_34.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_37.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_47.png"/></li>-->
+                <!--</ul>-->
+        	<!--</div>-->
+        	<!--<div>Vé số thứ 3</div>-->
+        	<!--<div>-->
+                <!--<ul>-->
+                  <!--<li><img src="assets/css/images/g_5.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_14.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_22.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_34.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_37.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_47.png"/></li>-->
+                <!--</ul>-->
+        	<!--</div>-->
+        	<!--<div>Vé số thứ 4</div>-->
+        	<!--<div>-->
+                <!--<ul>-->
+                  <!--<li><img src="assets/css/images/g_5.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_14.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_22.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_34.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_37.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_47.png"/></li>-->
+                <!--</ul>-->
+        	<!--</div>-->
+        	<!--<div>Vé số thứ 5</div>-->
+        	<!--<div>-->
+                <!--<ul>-->
+                  <!--<li><img src="assets/css/images/g_5.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_14.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_22.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_34.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_37.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_47.png"/></li>-->
+                <!--</ul>-->
+        	<!--</div>-->
+        	<!--<div>Vé số thứ 6</div>-->
+        	<!--<div>-->
+                <!--<ul>-->
+                  <!--<li><img src="assets/css/images/g_5.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_14.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_22.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_34.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_37.png"/></li>-->
+                  <!--<li><img src="assets/css/images/g_47.png"/></li>-->
+                <!--</ul>-->
+        	<!--</div>-->
+        </div>
+     </div>
+     <!-- 底部_宣告 -->
+     <div class="f_box_p">
+	  <ul>
+	    <li>1.Hệ thống sẽ tạm ngừng phát vé số trong thời gian từ 17:00 -19:00 các ngày mở thưởng của xổ số Vietlott 
+	    </li>
+	    <li>
+		 2.Kết quả quay thưởng minh bạch và được căn cứ cuối cùng dựa theo trang chủ của xổ số Vietlott Mega6/45
+		</li>
+	  </ul>
+	</div>
+</section>
+
+<footer>
+	<span><img src="{furl}css/images/foot_logo.png"/></span>
+</footer>
+<!-- 底部按鈕 -->
+</div><!-- phone_wrap end -->
+
+<!-- 遮罩曾 -->
+<div class="mask_box ">
+
+<div class="prd_info_box "> 
+  <a href="javascript:void(0)"><img src="{furl}css/images/close_btn.png"/></a>
+   <div class="m_logo">
+	    <img src="{furl}css/images/mask_logo.png"/>
+   </div>
+   <div class="m_logo2 btn_close">
+	    <img src="{furl}css/images/mask_logo.png"/>
+   </div>
+<!-- 資料區塊 -->
+<div class="data_box">
+<!-- 登入視窗 -->
+  <div class="login_box">
+  	   <div class="login_inner">
+  	   	  <span>Tên đăng nhập</span>
+  	   	  <span><input type="text" id="acc_login"></span>
+  	   </div>
+  	   <div class="login_btn">
+  	   	   <a href="javascript:void(0)" class="index_a  acc_login">
+  	   	   	  <span>Đăng nhập</span>
+  	   	   </a>
+  	   </div>
+  </div>
+<!-- 登入視窗 -->
+<!-- 規則說明彈窗 -->
+<div id="content_2" class="data_inner2 mCustomScrollbar btn_close" data-mcs-theme="dark">
+	   <h1>Đối tượng</h1>
+	   <p>Khuyến mãi này dành cho tất cả hội viên DUBAI PALACE</p>
+	   <h1>Tiền thưởng</h1>
+	   <div class="inner_pic01">
+	   	   <img src="{furl}css/images/inner_pic.png?=1.0.1"/>
+	   </div>
+	   <div class="inner_pic02 btn_close">
+	   	   <img src="{furl}css/images/inner_pic02.png?=1.0.1"/>
+	   </div>
+	   <h1>Điều khoản</h1>
+	   <ul>
+	   	 <li>1. Vé số sau khi đã nhận số thì chỉ có giá trị so thưởng 1 lần ở kỳ tiếp theo</li>
+	   	  <li>2. Kết quả mở thưởng dựa theo kết quả của Vietlott Mega 6/45 được công bố tại trang chủ của Vietlott: http://vietlott.vn</li>
+	   	  <li>3. Kết quả quay số và tiền thưởng sẽ được cập nhật trước 18:00 các ngày thứ 2, thứ 5 hàng tuần đồng thời sẽ thông báo cho những hội viên trúng thưởng qua thông tin cá nhân trên DUBAI PALACE</li>
+	   	  <li>4. Vào các ngày mở thưởng, sẽ không thể nhận vé số trong khoảng thời gian từ 17:00 ~ 19:00 (Giờ Việt Nam)</li>
+<li>5. Tiền thưởng cần đạt 3 lần cược hiệu lực là có thể rút tiền</li>
+ <li>6. Vé có thời hạn là 14 ngày, nếu quá 14 ngày mà hội viên không nhận vé số thì coi như từ bỏ quyền nhận vé số đó</li>
+	   </ul>
+</div>
+<!--  end  規則說明彈窗  -->
+
+<!-- 會員基本資訊彈窗 -->
+<div id="content_1" class="data_inner1 mCustomScrollbar btn_close" data-mcs-theme="dark">
+	  <!--  tab01  -->
+      <span class="jump_box"><img src="{furl}css/images/mask_logo02.png" class="data_pic"/></span>
+	  <div class="tab01">
+		  <!-- 轉號碼記錄 派獎資訊 -->
+		 <span class="y_txt1">Kiểm tra số trên vé</span>
+		 	 <select name="option_turn_date" id="option_turn_date">
+
+		 	 </select>
+		 <span>（Giờ GMT+8）(Dấu  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nghĩa là tiền thưởng đã cập nhật)
+		 </span>
+       </div><!--  end tab01 -->
+
+       <div class="tab01_tab">
+	         <!--  網頁版 歷史紀錄 轉號碼 -->
+	         <div class="table_box" id="turn_number">
+	         	<div class="tr_box">
+	         	  <div class="td_box">Ngày nhận vé số</div>
+	         	  <div class="td_box">Mã số trên vé số của bạn</div>
+	         	  <div class="td_box">Ngày mở thưởng</div>
+	         	  <div class="td_box">Tiền thưởng</div>
+	         	</div>
+	         	<!--<div class="tr_box turn">-->
+	         	  <!--<div class="td_box">2017/6/13  15:45</div>-->
+	         	  <!--<div class="td_box">01、12、25、10、36</div>-->
+	         	  <!--<div class="td_box">2017/6/18</div>-->
+	         	  <!--<div class="td_box">Chưa mở thưởng</div>-->
+	         	<!--</div>-->
+	         	<!--<div class="tr_box">-->
+	         	  <!--<div class="td_box">2017/6/13  15:45</div>-->
+	         	  <!--<div class="td_box">01、12、25、10、36</div>-->
+	         	  <!--<div class="td_box">2017/6/18</div>-->
+	         	  <!--<div class="td_box">-->
+	         	      <!--<span>-->
+	         	       <!--<img src="{furl}css/images/circle.png"/>-->
+	         	      <!--</span>30.000.000 VND-->
+	         	  <!--</div>-->
+	         	<!--</div>-->
+	         	<!--<div class="tr_box">-->
+	         	  <!--<div class="td_box ">2017/6/13  15:45</div>-->
+	         	  <!--<div class="td_box">01、12、25、10、36</div>-->
+	         	  <!--<div class="td_box">2017/6/18</div>-->
+	         	  <!--<div class="td_box">Không trúng thưởng</div>-->
+	         	<!--</div>-->
+	     </div>
+         <!--  手機版本 歷史會員 轉號碼記錄-->
+	     <div class="p_first_tab ">
+	        <!--<div class="p_tr bg_topic">-->
+		     	 <!--<div class="l_td">-->
+		     	 	<!--Ngày nhận vé số：2017/6/13  15:45-->
+		     	 <!--</div>-->
+		     	 <!--<div class="r_td">-->
+		     	 	<!--Ngày nhận vé số：2017/6/18  15:45-->
+		     	 <!--</div>-->
+		    <!--</div>-->
+		    <!--<div class="p_tr">-->
+		     	 <!--<div class="l_td l_txt">-->
+		     	 	<!--01、12、25、10、36-->
+		     	 <!--</div>-->
+		     	 <!--<div class="r_td r_txt">-->
+		     	 	<!--Chưa mở thưởng-->
+		     	 <!--</div>-->
+		    <!--</div>-->
+
+		    <!--<div class="p_tr bg_topic">-->
+		     	 <!--<div class="l_td">-->
+		     	 	<!--Ngày nhận vé số：2017/6/14  15:45-->
+		     	 <!--</div>-->
+		     	 <!--<div class="r_td">-->
+		     	 	<!--Ngày nhận vé số：2017/6/18  15:45-->
+		     	 <!--</div>-->
+		    <!--</div>-->
+		    <!--<div class="p_tr">-->
+		     	 <!--<div class="l_td l_txt">-->
+		     	 	<!--01、12、25、10、36-->
+		     	 <!--</div>-->
+		     	 <!--<div class="r_td r_txt">-->
+		     	 	<!--<span>-->
+	         	       <!--<img src="{furl}css/images/b_circle.png"/>-->
+	         	    <!--</span>30.000.000 VND-->
+		     	 <!--</div>-->
+		    <!--</div>-->
+
+		    <!--<div class="p_tr bg_topic">-->
+		     	 <!--<div class="l_td">-->
+		     	 	<!--Ngày nhận vé số：2017/6/13  15:45-->
+		     	 <!--</div>-->
+		     	 <!--<div class="r_td">-->
+		     	 	<!--Ngày nhận vé số：2017/6/18  15:45-->
+		     	 <!--</div>-->
+		    <!--</div>-->
+		    <!--<div class="p_tr">-->
+		     	 <!--<div class="l_td l_txt">-->
+		     	 	<!--01、12、25、10、36-->
+		     	 <!--</div>-->
+		     	 <!--<div class="r_td r_txt">-->
+		     	 	<!--Không trúng thưởng-->
+		     	 <!--</div>-->
+		    <!--</div>-->
+	     </div>
+		 <span class="ad_txt">
+		 	※Hệ thống tự động phát thưởng và câp nhật tiền vào tài khoản hội viên trước 18:00 thứ 2, thứ 5 hàng tuần
+		 </span>
+	  </div><!--  end tab01_tab -->
+	  
+	  <!--  tab02  -->
+	  <div class="tab01">
+		  <!-- 期數 -->
+		 <span class="y_txt2">Kết quả mở thưởng</span>
+		 	 <select name="num_periods" id="num_periods">
+				 <option value="">Chọn số kỳ</option>
+				 {number_periods}
+				 	<option value="{number_periods}">{number_periods}</option>
+				 {/number_periods}
+		 	 </select>
+       </div>
+		<!--  end 期數 -->
+       <div class="tab01_tab ">
+		   <!-- 期數資料  -->
+		 <table border="0" cellpadding="0" cellspacing="0" class="periods_data">
+		 	<tr class="td1">
+		 		<td >Kỳ mở thưởng</td>
+		 		<td >Ngày mở thưởng</td>
+		 		<td >Kết quả mở thưởng</td>
+		 	</tr>
+		 </table>
+		 <span class="ad_txt02">
+		 	Kết quả dựa theo công bố trên trang chủ của Vietlott.vn
+		 </span>
+	  </div>
+	  <!--  end 期數資料 -->
+
+	  <!--  tab03  -->
+	  <div class="tab01">
+		  <!-- 兌獎卷記錄 網頁 手機 查詢 -->
+		 <span class="y_txt3">Lịch sử nhận vé</span>
+		  <input type="date"  id="ticket_start" value="{ticket_start}" size="8">
+		 	 <!--<select readonly>-->
+		  <!--<option>20-06-2017</option>-->
+		  <!--<option>{ticket_start}</option>-->
+		  <!--<option>20-06-2017</option>-->
+		  <!--<option>20-06-2017</option>-->
+	  <!--</select>-->
+		 <sapn style="color:#fff">&nbsp;~&nbsp;</sapn>
+		  <input type="date"  id="ticket_end"  value="{ticket_end}" size="8">
+		 	 <!--<select readonly>-->
+		 	 	<!--<option>20-06-2017</option>-->
+		 	 	<!--&lt;!&ndash;<option>{ticket_end}</option>&ndash;&gt;-->
+		 	 	<!--<option>20-06-2017</option>-->
+		 	 	<!--<option>20-06-2017</option>-->
+		 	 <!--</select>-->
+		 <span class="popup">
+		    <a href="javascript:void(0)" class="tab3_btn ticket_story"><span>Tra cứu</span></a>
+		 </span>
+       </div><!--  end tab01 -->
+
+       <div class="tab01_tab ">
+		   <!-- 顯示兌獎卷 歷史資料 -->
+		 <table border="0" cellpadding="0" cellspacing="0" class="ticket_list">
+		 	<tr class="td1">
+		 		<td >Ngày nhận vé</td>
+		 		<td >Số lượng vé<br>nhận được</td>
+		 		<td class="dis_box">Ngày hết hạn</td>
+		 		<td >Hạng mục khuyến mãi</td>
+		 		<td class="dis_box">Tổng số vé chưa nhận</td>
+		 	</tr>
+		 	<!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >5Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >2017/06/13 Nạp tiền</td>-->
+		 		<!--<td class="dis_box">80</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr >-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >3Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >3 ngày đăng nhập liên tiếp</td>-->
+		 		<!--<td class="dis_box">83</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >10Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >Khuyến mãi FB</td>-->
+		 		<!--<td class="dis_box">73</td>-->
+		 	<!--</tr>-->
+
+		    <!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >5Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >2017/06/13 Nạp tiền</td>-->
+		 		<!--<td class="dis_box">80</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr >-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >3Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >3 ngày đăng nhập liên tiếp</td>-->
+		 		<!--<td class="dis_box">83</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >10Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >Khuyến mãi FB</td>-->
+		 		<!--<td class="dis_box">73</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >5Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >2017/06/13 Nạp tiền</td>-->
+		 		<!--<td class="dis_box">80</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr >-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >3Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >3 ngày đăng nhập liên tiếp</td>-->
+		 		<!--<td class="dis_box">83</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >10Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >Khuyến mãi FB</td>-->
+		 		<!--<td class="dis_box">73</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >5Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >2017/06/13 Nạp tiền</td>-->
+		 		<!--<td class="dis_box">80</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr >-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >3Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >3 ngày đăng nhập liên tiếp</td>-->
+		 		<!--<td class="dis_box">83</td>-->
+		 	<!--</tr>-->
+		 	<!--<tr>-->
+		 		<!--<td >2017/6/13  15:45</td>-->
+		 		<!--<td >10Vé</td>-->
+		 		<!--<td class="dis_box">2017/6/15  15:45</td>-->
+		 		<!--<td >Khuyến mãi FB</td>-->
+		 		<!--<td class="dis_box">73</td>-->
+		 	<!--</tr>-->
+		 </table>
+	  </div><!--  end tab01_tab -->
+
+</div>
+<!--  end 會員基本資訊彈窗 -->
+</div><!--  end  data_box  -->
+
+</div><!--  end  prd_info_box  -->
+</div><!--  end  mask_box  -->
+</body>
+<script src="{furl}js/jquery.timers-1.2.js"></script>
+<script src="{furl}js/scrollbar/jquery.mCustomScrollbar.js"></script>
+<script>
+$(function(){
+	/* 捲動瀏覽器畫面  瀏覽器畫面被捲動才發生 */
+	$(window).scroll(function(){
+		var scrollTopVal = $(window).scrollTop();
+
+		/* 時間倒數區塊 固定高度 */
+		$('.float_box').stop().animate({'top': scrollTopVal + 128 },300);
+		$('.float_box2').stop().animate({'top': scrollTopVal + 800 },300);
+	});
+
+	/* 點擊 規則說明 */
+	$('.info_btn, .phone_menu a:last-child').on('click',function(){
+	  $('.mask_box').fadeIn(); /* 滑入 */
+	  $('.data_inner1').hide(); /* 會員歷史紀錄 */
+	  $('.data_inner2').show(); /* 規則談窗 */
+
+	  $('.login_box').hide(); /* 登入視窗 */
+	  $('.m_logo').hide(); /* 歷史紀錄 logo */
+	  $('.m_logo2').show(); /* 規則彈窗 logo */
+	})
+
+	/* 關掉彈窗 */
+	$('.prd_info_box > a').on('click',function(){
+	  $('.mask_box').fadeOut();
+	  $('body').removeClass('lock_s');
+	})
+
+	/* 打開彈跳視窗後 body鎖住scroll */
+	$('.data_btn , .info_btn , .data_btn_p , .info_btn_p ').on('click',function(){
+		$('body').addClass('lock_s');
+
+	});
+});
+
+var account = '';
+var number_periods = '';
+var index_fun = function () {
+    var _this = this,
+		that = $('.total_wrap'),
+        opt =  {
+            buttons: {
+                'Đóng': {
+                    btnClass: 'btn-default'
+                }
+            },
+        };
+    var fn = {
+        /* 登入 */
+        login: function(){
+            var send = {};
+            var _this = this;
+
+            /* 驗證空白 */
+            send['acc']= $('#acc_login').val() /* 取得會員帳號  */
+            if (send['acc'] === '') {
+                popup.alert('Thông báo', 'Xin điền tên đăng nhập', null, opt);
+                that.find('#acc_login').focus();
+                return false;
+            }
+            /* 登入 */
+            sendFun.post('{burl}login/dubai', {acc: send['acc']}, {
+                onSuccess: function(res){
+					 account = res.acc; /* 會員帳號 */
+                     count_ticket = res.count_ticket; /* 可使用彩卷 */
+
+					_this.select_init(count_ticket); /* 判斷剩餘彩票數量 給選擇的數量 */
+                    _this.select_val(); /* 搜尋期數號碼 */
+                    _this.option_turn_date(account); /* 會員轉號碼歷史紀錄 日期 */
+                    _this.select_turn_date_val(account); /* 會員轉出號碼歷史紀錄 */
+                    _this.get_last_data(account); /* 取得期數 會員轉號碼 最新的日期 */
+					_this.get_ticket_story_month();  /* 會員兌獎卷 預設顯示最新一個月 */
+
+					 /* 登入視窗關閉 */
+                    $('.mask_box').fadeOut();
+                    $('body').removeClass('lock_s');
+
+                    /* 登入之後 顯示會員基本資訊 彩球 */
+                    $('.ball_box2').css('display', 'block');
+                    $('.mem_data').css('display', 'block').append('Hội viên <span>'+ account + '</span> thân mến! Chào mừng bạn đến với DUBAI VIETLOTT<br>Bạn có  <span class="count_ticket">'+ count_ticket  +'</span> vé số chưa nhận，bấm【Nhận vé số】để lấy các số trong vé số của bạn'); /* 網頁版 顯示會員資訊 */
+
+					/* 手機板 登入之後 顯示 會員基本資訊 */
+					$('.phone_txt').css('display', 'block').append('Hội viên <span>' + account +'</span> thân mến! Chào mừng bạn\n' +
+																	'đến với DUBAI VIETLOTT<br><br>\n' +
+																	'Bạn có  <span class="count_ticket">'+ count_ticket +'</span> vé số chưa nhận，bấm【Nhận vé số】để lấy các số trong vé số của bạn');
+
+					/* 如果會員登入之後 兌獎卷數量 是0的話 */
+					/*if(count_ticket == 0) {
+                        popup.alert('Thông báo', 'Xin điền tên đăng nhập');
+					}*/
+                },
+                onFail: function(res) {
+                    switch (res.code) {
+                        case 200 :
+                            popup.alert('Thông báo', 'Tên đăng nhập không chính xác', null, opt);
+                            break;
+                        default :
+                            popup.alert(res.title, res.msg, null, opt);
+                            break;
+                    }
+                }
+            });
+        },
+        /* 跑馬燈資料 */
+        get_marquee_list: function () {
+            sendFun.post('{burl}get_marquee_list', {}, {
+                onSuccess: function(res){
+                    var marquee_mem = res.marquee_mem,
+                        marquee_length = marquee_mem.length,
+					 	pc_marquee = '',
+                    	mobile_marquee = '';
+
+                    if(marquee_length > 0) {
+                        for(i=0; i<marquee_length; i++) {
+                            pc_marquee += 'Chúc mừng hội viên' + '&nbsp;' + '<strong style="color: yellow">'+marquee_mem[i]['winning_member'] + '</strong>'+ '&nbsp;' + 'trúng thưởng'+ '  ' + '<strong style="color: yellow">' + addCommas(parseInt(marquee_mem[i]['winning_amount'])) + 'VND' + '</strong>'+'&nbsp;&nbsp;&nbsp';
+                            mobile_marquee += 'Chúc mừng hội viên' + '&nbsp;' + '<strong style="color: yellow">' +marquee_mem[i]['winning_member'] +'</strong>' +' trúng thưởng ' + '<strong style="color: yellow">'+ addCommas(parseInt(marquee_mem[i]['winning_amount'])) + 'VND' + '</strong>' +'&nbsp;&nbsp;&nbsp';
+                        }
+                        that.find('#marquee').append('<marquee>' + pc_marquee + '</marquee>');
+                        $('#mobile_marquee').append('<marquee>' + mobile_marquee + '</marquee>');
+					} else {
+                        that.find('#marquee').append('<marquee>Chưa có thông tin trúng thưởng</marquee>');
+                        $('#mobile_marquee').append('<marquee> Chưa có thông tin trúng thưởng </marquee>');
+					}
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+		/* 搜尋期數值 */
+		select_val: function () {
+		    var _this = this;
+
+            $("#num_periods").on('change', function(e) {
+                num_periods = e.target.value;
+                _this.select_periods(num_periods);
+			});
+        },
+        /* 搜尋期數 資料 */
+        select_periods: function (num_periods) {
+            $(".periods_list").remove();
+            sendFun.post('{burl}get_periods_data', {num_periods:num_periods}, {
+                onSuccess: function(res){
+                    var periods_data = res.periods_data,
+                        periods_data_len = periods_data.length;
+
+					for(i = 0; i < periods_data_len; i++) {
+					    var winning_numbers = periods_data[i]['winning_numbers'];
+                        	winning_numbers_str = winning_numbers.replace(/,/g, "、");
+                        $('.periods_data').append('<tr class="periods_list">' +
+														'<td>' + periods_data[i]['number_periods'] +'</td>' +
+														'<td>' + periods_data[i]['lottery_date'] +'</td>' +
+														'<td>' + winning_numbers_str +'</td>' +
+							                       '</tr>')
+					}
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+        /* 選取轉出日期 */
+        select_turn_date_val: function (account, turn_date) {
+            var _this = this;
+
+            $("#option_turn_date").on('change', function(e) {
+                turn_date = e.target.value;
+                _this.select_turn_date(turn_date, account);
+            });
+        },
+        /* 搜尋會員轉出號碼歷史紀錄 */
+        select_turn_date: function (turn_date, account) {
+            $(".turn").remove();
+            $(".p_first_tab").empty();
+            sendFun.post('{burl}get_mem_turn_history', {acc:account, turn_date:turn_date}, {
+                onSuccess: function(res){
+                    var mem_turn = res.mem_turn_list,
+                        mem_turn_len = mem_turn.length;
+
+                    for (i =0; i < mem_turn_len; i++) {
+                        if(mem_turn[i]['receive_bonus'] == '不中獎') {
+							 receive_bonus = 'Không trúng thưởng';
+						} else if(mem_turn[i]['receive_bonus'] == '未開獎') {
+                             receive_bonus = 'Chưa mở thưởng';
+						} else if(mem_turn[i]['status1'] == 4){
+                            /* 已存入 */
+                            receive_bonus = '<span>' +
+												'<img src="{furl}css/images/circle.png"/>' +
+											'</span>'+ addCommas(mem_turn[i]['receive_bonus'])+ '  '+ 'VND';
+						} else if(mem_turn[i]['status1'] != 4) {
+						    /* 未存入 */
+                            receive_bonus = addCommas(mem_turn[i]['receive_bonus']) + '   '+ 'VND';
+						}
+
+                        var turn_num = mem_turn[i]['turn_num'];
+                        	turn_num_str = turn_num.replace(/,/g, "、");
+
+						/* 網頁版 */
+                        $('#turn_number').append('<div class="tr_box turn">' +
+													'<div class="td_box">'+ mem_turn[i]['turn_time'] +'</div>' +
+													'<div class="td_box">' + turn_num_str +'</div>' +
+													'<div class="td_box">' + mem_turn[i]['turn_date'] +'</div>' +
+													'<div class="td_box">'+ receive_bonus +'</div>' +
+												 '</div>');
+
+                        /* 手機板 */
+                        $('.p_first_tab').append('<div class="p_tr bg_topic">' +
+													'<div class="l_td">\n' +
+													'    Ngày nhận vé số：'+ mem_turn[i]['turn_time'] +'' +
+													'</div>' +
+													'<div class="r_td">' +
+													'  	Ngày nhận vé số：'+ mem_turn[i]['turn_date'] +
+													'</div>' +
+													'</div>' +
+													'<div class="p_tr">' +
+													'<div class="l_td l_txt">' +
+													'		'+ mem_turn[i]['turn_num']  +
+													'</div>' +
+													'<div class="r_td r_txt">' +
+													'		'+ receive_bonus +
+													'</div>' +
+												'</div>');
+					}
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+        /* 請選擇張數 可選 1 3 5 10 30 */
+        select_init: function (count_ticket) {
+            $("#ticketnum").html('<option value="" selected disabled>Chọn số vé số muốn nhận</option>');
+            $("#mobile_select").html('<option value="" selected disabled>Lựa chọn số vé</option>');
+            var ticketnum_arr = [1, 3, 5, 10, 30];
+            var option_arr = '';
+            for (var i = 0; i < ticketnum_arr.length; i++) {
+                /* 剩餘彩票卷數 低於 可選數量 */
+                if (count_ticket>=ticketnum_arr[i]) {
+                    option_arr += '<option value="'+ticketnum_arr[i]+'">'+ticketnum_arr[i]+' '+'vé</option>';
+                }
+            }
+            $("#ticketnum").append(option_arr); /* 網頁版 */
+            $("#mobile_select").append(option_arr); /* 手機板 */
+        },
+		/* 會員轉號碼歷史紀錄 */
+        option_turn_date: function (acc) {
+            $("#option_turn_date").html('<option value="" selected >Lựa chọn ngày tháng</option>');
+            var option_date = '';
+
+            sendFun.post('{burl}get_mem_history_turn_num', {acc:acc}, {
+                onSuccess: function(res){
+					var date = res.option_turn_date;
+						date_time = date.length;
+
+                    for (var i = 0; i < date_time; i++) {
+                        option_date += '<option value="'+date[i]['dateId']+'">'+date[i]['date']+'</option>';
+					}
+                    $("#option_turn_date").append(option_date);
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+		/* 會員兌獎卷 歷史紀錄 */
+        ticket_story: function () {
+			var ticket_start = $('#ticket_start').val(),
+                ticket_end = $('#ticket_end').val();
+
+			$('.ticket_list_table').remove();
+            sendFun.post('{burl}get_ticket_story', {acc:account, ticket_start:ticket_start, ticket_end:ticket_end}, {
+                onSuccess: function(res) {
+                    var ticket_list = res.ticket_list,
+                        ticket_list_len = ticket_list.length;
+
+                    for (i = 0; i < ticket_list_len; i++) {
+                        $('.ticket_list').append('<tr class="ticket_list_table">' +
+													'<td >'+ ticket_list[i]['ticket_add_time'] +'</td>' +
+													'<td >'+ ticket_list[i]['ticket_num'] +'Vé</td>' +
+													'<td class="dis_box">'+ ticket_list[i]['effective_date'] +'</td>' +
+													'<td >'+ ticket_list[i]['remark'] +'</td>' +
+													'<td class="dis_box">'+ ticket_list[i]['cumulatively_effective'] +'</td>' +
+												'</tr>');
+                    }
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+        /* 會員兌獎卷 預設一個月 */
+        get_ticket_story_month: function () {
+            sendFun.post('{burl}get_ticket_story_month', {acc:account}, {
+                onSuccess: function(res) {
+                    var ticket_list = res.ticket_list,
+                        ticket_list_len = ticket_list.length;
+
+                    for (i = 0; i < ticket_list_len; i++) {
+                        $('.ticket_list').append('<tr class="ticket_list_table">' +
+                            '<td >'+ ticket_list[i]['ticket_add_time'] +'</td>' +
+                            '<td >'+ ticket_list[i]['ticket_num'] +'Vé</td>' +
+                            '<td class="dis_box">'+ ticket_list[i]['effective_date'] +'</td>' +
+                            '<td >'+ ticket_list[i]['remark'] +'</td>' +
+                            '<td class="dis_box">'+ ticket_list[i]['cumulatively_effective'] +'</td>' +
+                            '</tr>');
+                    }
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+		/* 會員轉號碼  */
+        turn_number: function (type) {
+            var _this = this;
+            	//periods = that.find('#number_periods').text();
+
+            if(type=='pc') {
+                ticketnum = $("#ticketnum option:selected").val();
+			} else if(type=='mobile'){
+                ticketnum = $("#mobile_select option:selected").val();
+			}
+
+			if (ticketnum =='') {
+                popup.alert('Thông báo', 'Lựa chọn số lượng vé !', null, opt);
+                $(".mobile_ball").remove(); /* 手機板 表格 標題 */
+                $(".ball_num").remove(); /* PC 版 表格 標題 */
+                $(".ball").remove(); /* 把上一個轉出號碼 移除 再產生新的號碼  網頁版 手機板*/
+                return false;
+            }
+
+			sendFun.post('{burl}use_ticket', {acc:account, ticket:ticketnum, count_ticket:count_ticket, number_periods:number_periods}, {
+				onSuccess: function(res){
+					var ball_num = res.lottery_ball,
+						count_ticket = res.count_ticket,
+						ball_list = '',
+						mobile_list = '';
+
+					$(".ball").remove(); /* 把上一個轉出號碼 移除 再產生新的號碼  網頁版 手機板*/
+					for (var i = 0; i < ball_num.length; i++) {
+						var num_arr = ball_num[i];
+						ball_list += '<tr class="ball"><td>Vé số thứ'+ (i+1)+ '</td>'; /* 網頁版 */
+						mobile_list += '<div class="ball">Vé số thứ'+ (i+1)+ '</div><div class="ball"><ul>'; /* 手機板 */
+
+						for (var j = 0; j < 6; j++) {
+							ball_list += '</td><td class="ball_td"><img src="{furl}css/images/ball_'+ num_arr[j] +'.png"/></td>'; /* 網頁版 */
+							mobile_list += '<li><img src="{furl}css/images/g_'+ num_arr[j] +'.png"/></li>'; /* 手機板 */
+						}
+						ball_list += '</tr>'; /* 網頁版 */
+						mobile_list += '</ul></div>'; /* 手機板 */
+
+					}
+					$(".tab_box").fadeIn("slow").append(ball_list); /* 網頁版 */
+					$('.ball_num').show(); /* 網頁版 */
+
+					$(".tab_ball").fadeIn("slow").append(mobile_list); /* 手機板 */
+					$(".tab_topic").show(); /* 手機板 */
+
+					/* 扣掉彩卷數量 */
+					$(".count_ticket").text(count_ticket);
+					_this.select_init(count_ticket); /* 判斷剩餘彩票數量 給選擇的數量 */
+
+					/* 轉球動畫 */
+					var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+					$('.ball_box,.keno_ball').addClass('active').one(animationEnd, function() {
+						$('.ball_box,.keno_ball').removeClass('active');
+					});
+
+					_this.option_turn_date(account); /* 會員轉號碼歷史紀錄 日期 */
+					_this.get_last_data(account); /* 取得期數 會員轉號碼 最新的日期 */
+					$('.ticket_list_table').remove(); /* 移除 會員兌獎卷歷史紀錄 */
+					_this.get_ticket_story_month(); /* 會員兌獎卷 預設一個月 */
+				},
+				onFail: function(res){
+					popup.alert(res.title, res.msg, null, opt);
+				}
+			});
+        },
+        /* 倒數計時 搜取倒數的期數 */
+        get_last_lottery: function () {
+            var _this = this;
+            /* 期數倒數計時 */
+            sendFun.post('{burl}get_last_lottery', {}, {
+                onSuccess: function(res){
+                    var num = res.list;
+                    startime = res.start_time; /* 開始時間 減去一小時 越南時間 */
+                    optionDate = res.optionDate; /*  更改日期格式 dd/mm/yyyy　*/
+                    number_periods = num['number_periods']; /* 期數 */
+                    lottery_date = num['lottery_date']; /* 日期 */
+
+					/* 轉換日期格式 瀏覽器支援的問題 EX: 2017-12-01T13:00:00 */
+					if(lottery_date) {
+                        startime = startime.replace(' ', 'T');
+                        lottery_date = lottery_date.replace(' ', 'T');
+					}
+
+                    startDate = new Date(startime);
+                    endDate = new Date(lottery_date);
+                    spantime = (endDate - startDate)/1000;
+
+					no_per = number_time(0) + ':' + number_time(0) + ':' + number_time(0);
+                    _this.last_second(num, spantime, no_per);
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+		/* 倒數秒數 */
+		last_second: function (num, spantime, no_per) {
+            var _this = this;
+			if(num) {
+                $(this).everyTime("1s", function(i) {
+                    spantime --;
+                    var d = Math.floor(spantime / (24 * 3600)),
+                        h = Math.floor((spantime % (24 * 3600)) / 3600),
+                        m = Math.floor((spantime % 3600) / (60)),
+                        s = Math.floor(spantime % 60);
+                    if (spantime > 0) {
+                        var hour = h + (d*24),
+                            min = m,
+                            sec = s,
+                            reciprocal = number_time(hour) + ':'+ number_time(min) + ':'+ number_time(sec);
+
+                        that.find('#reciprocal').text(reciprocal);
+                        that.find('#lottery_date').text(optionDate);
+                        that.find('#number_periods').text(number_periods);
+                    } else {
+                        /* 倒數結束的時候  呼叫下一個期數 */
+						$(this).stop(true).stopTime(); /* 計時計 停止 */
+                        _this.get_last_lottery();
+                        that.find('#reciprocal').text(no_per);
+                    }
+                });
+            } else {
+                /* 如果 沒有期數 */
+                //var no_per = number_time(0) + ':' + number_time(0) + ':' + number_time(0);
+                that.find('#lottery_date').text('Chưa đặt');
+                that.find('#number_periods').text('Chưa đặt');
+                that.find('#reciprocal').text(no_per);
+            }
+        },
+        /* 取得期數 會員轉號碼 最新的日期 */
+		get_last_data: function (account) {
+		    var _this = this;
+            sendFun.post('{burl}get_last_data', {account:account}, {
+                onSuccess: function(res){
+					var periods_data_last = res.periods_data_last,
+                    	mem_turn_list_last = res.mem_turn_list_last;
+                    	mem_turn_list_last_date = mem_turn_list_last.substr(0, 10);
+
+                    $("#num_periods").val(periods_data_last);
+                    $("#option_turn_date").val(mem_turn_list_last_date);
+
+                    _this.select_periods(periods_data_last);
+                    _this.select_turn_date(mem_turn_list_last_date, account);
+                },
+                onFail: function(res){
+                    popup.alert(res.title, res.msg, null, opt);
+                }
+            });
+        },
+        init : function () {
+            var _this = this;
+             	_this.get_marquee_list(); /* 跑馬燈資料 */
+            	_this.select_init(); /* 請選擇張數 */
+			    _this.get_last_lottery(); /* 倒數計時 */
+
+            /* 資料處理中 越南文 */
+            sendFun.default['loading_title'] = 'Đang thực hiện...';
+            sendFun.default['loading_content'] = 'Vui lòng không tắt cửa sổ này';
+
+
+            /* 點擊登入 */
+            $('.acc_login').on('click', function() {
+                _this.login();
+            });
+
+            /* 網頁版 會員轉號碼 */
+            that.find('.turn_number').on('click', function() {
+                /* 未登入狀態 */
+                if (account == '') {
+                    $('.mask_box').fadeIn();
+                    $('.login_box').show();
+                    $('.data_inner2').hide(); /* 規則彈窗 logo */
+                    $('.data_inner1').hide(); /* 會員歷史紀錄 */
+                } else {
+                    /* 已登入 */
+                    _this.turn_number('pc');
+				}
+            });
+
+            /* 手機板 會員轉號碼 */
+            $('.mobile_turn').on('click', function () {
+                /* 未登入狀態 */
+                if(account == '') {
+                    $('.mask_box').fadeIn();
+                    $('.login_box').show();
+                    $('.data_inner2').hide(); /* 規則彈窗 logo */
+                    $('.data_inner1').hide(); /* 會員歷史紀錄 */
+				} else {
+                    /* 已登入 */
+                    _this.turn_number('mobile');
+				}
+            });
+
+            /* 會員兌獎卷 歷史紀錄 */
+            $('.ticket_story').on('click', function () {
+               _this.ticket_story();
+            });
+
+            /* 未登入 會做的事情 */
+            $('.data_btn').on('click',function(){
+                /* 未登入 */
+                if (account == '') {
+                    $('.mask_box').fadeIn();
+                    $('.login_box').show(); /* 登入視窗 */
+                    $('.data_inner2').hide(); /* 規則彈窗 logo */
+                    $('.data_inner1').hide(); /* 會員歷史紀錄 */
+				} else {
+                    /* 已登入 */
+                    $('.mask_box').fadeIn();
+                    $('.data_inner2').hide(); /* 規則彈窗 logo */
+                    $('.data_inner1').show(); /* 會員歷史紀錄 */
+
+                    $('.login_box').hide(); /* 登入視窗 */
+                    $('.m_logo').hide();
+                    $('.m_logo2').show();
+                }
+            })
+
+            /* 按下 Enter 會做的事情 */
+            $('.login_box').on('keydown', function(event){
+                if (event.which == 13) {
+                    _this.login();
+                }
+            });
+        }
+	};
+    fn.init();
+    return fn;
+}
+
+var hfn = new index_fun();
+
+/* 不足未數  補0 */
+function number_time(num){
+     num = (num<10) ? '0'+num:num;return num;
+}
+
+/* 處理數字分位符號 */
+function addCommas(val) {
+    val += "";
+    var arr = val.split(".");
+    var re = /(\d{1,3})(?=(\d{3})+$)/g;
+    return arr[0].replace(re,"$1,") + (arr.length == 2 ? "."+arr[1] : "");
+}
+
+/* 客服連結 */
+function cs() {
+    var url = '{cs_link}';
+    window.open(url, 'newwindow', 'width=800,height=600');
+}
+</script>
+</html>

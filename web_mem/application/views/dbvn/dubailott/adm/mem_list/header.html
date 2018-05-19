@@ -1,0 +1,44 @@
+<div style="width:99%;">
+	<div class="input-group" style="position:absolute;width:200px;left:3%;">
+		<span class="input-group-addon">功能</span>
+		<span class="input-group-btn">
+          	<button type="button" class="btn btn-primary cls_child_btn" value="mem_single">會員查詢</button>
+			<button type="button" class="btn btn-primary cls_child_btn" value="mem_all">參加會員</button>
+			<button type="button" class="btn btn-primary cls_child_btn" value="mem_bingo">中獎會員</button>
+        </span>
+	</div>
+	<div align="center" id="div_grid" style="position:absolute;top:120px;width:97%;height:80%;position:absolute;left:0;right:0;margin-left:auto;margin-right:auto;">
+		<div class="clearfix"></div>
+		<div style="border-top:1px solid #cccccc; padding-bottom:10px;"></div>
+		<div id="mem_content"></div>
+	</div>
+
+</div>
+
+<script>
+	/* 會員名單 */
+    $('.cls_child_btn').on('click', function(){
+        $(this).siblings().removeClass('active'); /* 查找 此元素 並移除  active 元素*/
+        $(this).addClass('active'); /* 加入 active 元素*/
+
+        var type = $(this).val(); /* 取得值 */
+        chang_content(type);
+
+    });
+
+	/* 子頁面 */
+    function chang_content(type){
+        var send = {};
+			send['unit'] = 'mem_list';
+        	send['page'] = type;
+
+        sendFun.post('{burl}childView/', {send:send}, {
+            onSuccess: function(res){
+                $("#mem_content").html(res.view);
+            },
+            onFail: function(res){
+                popup.alert(res.title, res.msg);
+            }
+        });
+    }
+</script>

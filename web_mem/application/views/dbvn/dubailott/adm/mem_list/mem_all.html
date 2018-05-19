@@ -1,0 +1,275 @@
+<div class="clearfix mem_all">
+	<div class="col-xs-6 col-md-2" id="mem_ticket">
+		<div class="input-group">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-primary cls_child" value="voucher" id="voucher_inquiry">兌獎卷查詢</button>
+				<button type="button" class="btn btn-primary cls_child" value="duijiang" id="duijiang_number">兌獎號碼</button>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-1">
+		<div class="input-group">
+			<span class="input-group-addon">匯出：</span>
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-info cls_child_btn" id="voucher_inquiry_Download" style="display:none;">兌獎卷</button>
+				<button type="button" class="btn btn-info cls_child_btn" id="duijiang_number_Download" style="display:none;">兌獎號碼</button>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-2">
+		<div class="input-group">
+			<span class="input-group-addon">選擇日期：</span>
+			<span class="input-group-btn" style="width: 30px">
+				<select class="form-control" id="ticket_date">
+					 <option value="">請選擇</option>
+						{dateList}
+							<option value="{date}">{date}</option>
+						{/dateList}
+			  	</select>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-1 col-md-1" style="margin-right: 40px;">
+		<div class="input-group">
+			<span class="input-group-addon">匯出：</span>
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-info cls_child_btn" id="no_use_ticket">未使用獎卷</button>
+			</span>
+		</div>
+	</div>
+	<div class="col-xs-1 col-md-2">
+		<div class="input-group">
+			<span class="input-group-addon">選擇日期：</span>
+			<span class="input-group-btn" style="width: 30px">
+				<select class="form-control" id="no_use_ticket_date">
+					 <option value="">請選擇</option>
+						{dateList}
+							<option value="{date}">{date}</option>
+						{/dateList}
+			  	</select>
+			</span>
+		</div>
+	</div>
+</div>
+<div id="headerPage"  style="margin: 20px 0;">
+	<div class="box-body">
+		<table id="mem_all_Grid"></table>
+	</div>
+</div>
+<script>
+    var mem_all_Fn = function(){
+        var _this = this;
+        var that = $(".mem_all");
+        var fn = {
+            /* 兌獎卷 內容 */
+            voucherGrid: function(){
+                var colNames = [
+                        '兌獎卷新增時間',
+                        '賬號',
+                        '每日最高存款金額',
+                        '獲得兌獎卷數量',
+                        '未使用彩卷數量',
+                        '累计有效卷数',
+                        '有效日期',
+                        '備註'
+                    ],
+                    colModel = [
+                        { name: 'ticket_add_time', width: 25, align: 'center'},
+                        { name: 'acc_deposit', width: 25, align: 'center'},
+                        { name: 'max_deposit', width: 25, align: 'center'},
+                        { name: 'ticket_num', width: 25, align: 'center'},
+                        { name: 'no_use_ticket', width: 25, align: 'center'},
+                        { name: 'cumulatively_effective', width: 25, align: 'center'},
+                        { name: 'effective_date', width: 25, align: 'center'},
+                        { name: 'remark', width: 25, align: 'center'}
+                    ];
+
+                jgrid.create('#mem_all_Grid', colNames, colModel);
+            },
+            /* 兌獎號碼 內容 */
+            duijiangGrid: function(){
+                var colNames = [
+                        '轉號日期',
+                        '賬號',
+                        '轉出號碼',
+                        '兌獎期數',
+                        '兌獎結果',
+                        '可獲得彩金'
+                    ],
+                    colModel = [
+                        { name: 'turn_time', width: 25, align: 'center'},
+                        { name: 'turn_acc', width: 25, align: 'center'},
+                        { name: 'turn_num', width: 25, align: 'center'},
+                        { name: 'order_per', width: 25, align: 'center'},
+                        { name: 'result', width: 25, align: 'center'},
+                        { name: 'receive_bonus', width: 25, align: 'center'}
+                    ];
+
+                jgrid.create('#mem_all_Grid', colNames, colModel);
+            },
+			/* 用日期蒐尋 兌換卷數 兌獎號碼 */
+			get_date_mem_list: function (type) {
+			    var _this = this;
+
+                if(type =='voucher_inquiry_date') {
+                    /* 兌獎卷查詢 */
+
+                    $("#voucher_inquiry_Download").show();
+                    $("#duijiang_number_Download").hide();
+
+                    $.jgrid.gridUnload('#mem_all_Grid');
+                    _this.voucherGrid();
+
+                    $("#mem_all_Grid").jqGrid('sortGrid', 'ticket_add_time', true, 'DESC');
+                } else if(type == 'duijiang_number_date') {
+                    /* 兌獎號碼 */
+
+                    $("#duijiang_number_Download").show();
+                    $("#voucher_inquiry_Download").hide();
+
+                    $.jgrid.gridUnload('#mem_all_Grid');
+                    _this.duijiangGrid();
+
+                    $("#mem_all_Grid").jqGrid('sortGrid', 'turn_time', true, 'DESC');
+                }
+
+                var ticket_date = $("#ticket_date option:selected").val();
+                if(ticket_date == '') {
+                    popup.alert('系統提示', '請選擇日期！');
+                    return false;
+				}
+                /* 兌獎卷查詢  兌獎號碼 */
+                sendFun.post('{burl}get_mem_list', {type: type, ticket_date: ticket_date}, {
+                    onSuccess: function(res){
+						jgrid.clearCurrent();
+
+						if(type =='voucher_inquiry_date') {
+							/* 兌獎卷查詢 */
+
+                            $("#voucher_inquiry_Download").show();
+                            $("#duijiang_number_Download").hide();
+
+							$.jgrid.gridUnload('#mem_all_Grid');
+							_this.voucherGrid();
+
+                            $("#mem_all_Grid").jqGrid('sortGrid', 'ticket_add_time', true, 'DESC');
+						} else if(type == 'duijiang_number_date') {
+							/* 兌獎號碼 */
+
+                            $("#duijiang_number_Download").show();
+                            $("#voucher_inquiry_Download").hide();
+
+							$.jgrid.gridUnload('#mem_all_Grid');
+							_this.duijiangGrid();
+
+                            $("#mem_all_Grid").jqGrid('sortGrid', 'turn_time', true, 'DESC');
+						}
+						jgrid.update('#mem_all_Grid', res.list);
+
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+            /**
+             *  匯出 Excel
+             *  get_data 取得 表格資料
+             */
+            downloadExcel: function(type){
+				var get_data = jgrid.getData('#mem_all_Grid'); /* 取得表格資料 */
+				sendFun.post('{burl}downloadExcel_type', {get_data: get_data, type: type}, {
+					onSuccess: function(res){
+						var download = $('<a>').attr({
+							'href': res.file, /* 檔案內容 */
+							'download': res.fileName /* 檔案名稱 */
+						});
+
+						$('body').append(download);
+						download[0].click();
+						download.remove();
+                        },
+					onFail: function(res){
+						popup.alert(res.title, res.msg);
+					}
+				});
+            },
+            /**
+             *  匯出 未使用彩卷
+             */
+            down_no_use_ticket: function(type){
+                var no_use_ticket_date = $("#no_use_ticket_date option:selected").val();
+                if(no_use_ticket_date == '') {
+                    popup.alert('系統提示', '請選擇日期！');
+                    return false;
+                }
+                sendFun.post('{burl}down_no_use_ticket', {type: type, no_use_ticket_date:no_use_ticket_date}, {
+                    onSuccess: function(res){
+                        var download = $('<a>').attr({
+                            'href': res.file, /* 檔案內容 */
+                            'download': res.fileName /* 檔案名稱 */
+                        });
+
+                        $('body').append(download);
+                        download[0].click();
+                        download.remove();
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+            init: function(){
+                var _this = this;
+                	_this.voucherGrid(); /* 兌獎卷查詢 */
+                	//_this.downloadExcel(); /* 匯出 Excel */
+
+                $("#voucher_inquiry").addClass('active'); /* 預設點擊  兌獎卷查詢 */
+                $("#voucher_inquiry_Download").show(); /* 預設顯示 兌獎卷 */
+
+				/* 兌獎卷查詢 */
+                $('#voucher_inquiry').on('click', function (){
+                    $("#voucher_inquiry").addClass('active');
+                    $("#duijiang_number").removeClass('active');
+
+                    _this.get_date_mem_list('voucher_inquiry_date');
+                });
+
+				/* 兌獎號碼查詢*/
+                $('#duijiang_number').on('click', function (){
+                    $("#duijiang_number").addClass('active');
+                    $("#voucher_inquiry").removeClass('active');
+
+                    _this.get_date_mem_list('duijiang_number_date');
+                });
+
+                /* 兌獎卷 資料下載 */
+                $('#voucher_inquiry_Download').on('click', function (){
+                    _this.downloadExcel('voucher_inquiry');
+                });
+
+                /* 兌獎號碼 資料下載 */
+                $('#duijiang_number_Download').on('click', function (){
+                    _this.downloadExcel('duijiang_number');
+                });
+
+                /* 兌獎號碼 資料下載 */
+                $('#no_use_ticket').on('click', function (){
+                    _this.down_no_use_ticket('no_use_ticket');
+                });
+
+				/* 選取日期 */
+                $("#ticket_date").on('change', function() {
+                    if ($('#voucher_inquiry').hasClass('active')) {
+                        _this.get_date_mem_list('voucher_inquiry_date');
+                    } else {
+                        _this.get_date_mem_list('duijiang_number_date');
+                    }
+                });
+            }
+        };
+        fn.init();
+        return fn;
+    }
+    var hfn = new mem_all_Fn();
+</script>

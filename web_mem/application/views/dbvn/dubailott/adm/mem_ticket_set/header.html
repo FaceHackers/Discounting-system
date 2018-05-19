@@ -1,0 +1,289 @@
+<div class="clearfix mem_ticket">
+	<div class="col-xs-6 col-md-5">
+		<div class="input-group">
+			<span class="input-group-addon">賬號：</span><input type="text" id="account" class="form-control ticket" required>
+			<span class="input-group-addon">兌獎卷數量</span><input type="number" id="ticket_num" class="form-control ticket" onkeyup="return ValidateNumber($(this),value)" required>
+			<span class="input-group-addon">備註</span><input type="text" id="remark" class="form-control ticket">
+			<span class="input-group-btn"><input type="button" class="btn btn-warning" id="add_ticket" value="新增"></span>
+		</div>
+	</div>
+	<div class="col-xs-6 col-md-3">
+		<form name="excelForm" method="post" enctype="multipart/form-data" class="form-inline">
+			<div class="input-group">
+				<span class="input-group-addon">批量上傳：</span>
+				<span class="input-group-btn">
+					<input type="file" id="excelFile" class="hidden">
+					<input type="text" id="excelFileName" class="form-control" value="尚未選擇檔案.." readonly>
+					<input type="button" id="downloadDemoBtn" class="btn btn-primary" value="EXCEL範本下載">
+					<input type="button" id="excelUploadBtn" class="btn btn-warning" value="上傳">
+				</span>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="mem_edit_ticket">
+	<form id="mem_ticket">
+		<table class="table table-bordered">
+			<tbody>
+			<tr>
+				<td>兌獎卷新增時間：</td>
+				<td><input type="text" id="ticket_add_time" name="ticket_add_time" class="form-control" readonly></td>
+			</tr>
+			<tr>
+				<td>賬號：</td>
+				<td><input type="text" id="account_edit" name="account_edit" class="form-control" readonly></td>
+			</tr>
+			<tr>
+				<td>調整數量：</td>
+				<td><input type="number" id="ticket_num_edit" name="ticket_num_edit" class="form-control" onkeyup="return ValidateNumber($(this),value)"></td>
+			</tr>
+			<tr>
+				<td>備註：</td>
+				<td><input type="text" id="remark_edit" name="remark_edit" class="form-control"></td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div id="headerPage" style="margin: 20px 0;">
+	<div class="box-body">
+		<table id="ticketGrid"></table>
+	</div>
+</div>
+<style>
+	#mem_edit_ticket {
+		position: absolute;
+		top: 25%;
+		left: 30%;
+		display: none;
+	}
+</style>
+<script>
+	var mem_tick_Fn = function(){
+        var _this = this;
+        var that = $(".mem_ticket");
+		var fn = {
+            initUpload: function(){
+                var _this = this;
+				/* 上傳會員兌換獎 */
+                $('#excelFile').change(function() {
+                    var fileName = $(this).val(); /* 檔案名稱 */
+                    var fileAry = fileName.split('\\'); /* 切割字串 \\ */
+                    $('#excelFileName').val(fileAry.pop()); /* 顯示檔案名稱 */
+                });
+				/* 點擊上傳檔案 */
+                $('#excelFileName').on('click', function(){
+                    $('#excelFile').click();
+                });
+				/* 點擊上傳 */
+                $('#excelUploadBtn').on('click', function(){
+                    _this.uploadExcel();
+                });
+				/* EXCEL範本下載 */
+                $('#downloadDemoBtn').on('click', function(){
+                    location.href = '{furl}excel/manual_demo.xlsx';
+                });
+            },
+			/* 上傳會員兌換獎 並顯示 清單 */
+            uploadExcel: function(){
+                if($("#excelFile").val() === ''){
+                    popup.alert('請先選擇檔案', '請選擇上傳名單 Excel 檔案');
+                    return false;
+                }
+
+                var data = new FormData($('form[name="excelForm"]')[0]); /* 使用 FormData 物件傳送檔案 */
+                data.append('excelFile', $('#excelFile')[0].files[0]); /* 取得檔案 */
+
+				/* 上傳檔案 顯示期數清單 */
+                sendFun.post('{burl}excel_ticket_upload', data, {
+                    onSuccess: function(res){
+                        open_win('{burl}upload_view_ticket', '', 0.8);
+                    }
+                }, true);
+            },
+			/* 表格標題 內容 */
+            initGrid: function(){
+                var colNames = [
+                        '兌獎卷新增時間',
+                        '賬號',
+                        '獲得兌獎卷數量',
+                        '備註',
+					    '功能'
+                    ],
+                    colModel = [
+                        { name: 'ticket_add_time', width: 25, align: 'center'},
+                        { name: 'account', width: 25, align: 'center'},
+                        { name: 'ticket_num', width: 25, align: 'center'},
+                        { name: 'remark', width: 25, align: 'center'},
+                        { name: 'system', width: 25, align: 'center',
+                            formatter: function(cellvalue, options, rowObject){
+                               var html = '';
+                              if (rowObject.id !== undefined && rowObject.id != '' &&  rowObject.chk_open != 1) {
+                                   html += '<button type="button" class="btn btn-warning" onclick="hfn.ticket_mod(\'mem_edit_ticket\', 900, 300,\''+rowObject.id+'\',\''+rowObject.ticket_add_time+'\',\''+rowObject.account+'\',\''+rowObject.ticket_num+'\',\''+rowObject.remark+'\')">編輯</button> ';
+                               }
+                               return html;
+                           }
+                     	}
+                  ];
+                jgrid.create('#ticketGrid', colNames, colModel);
+            },
+            /* 修改期數 */
+            ticket_mod: function(id, w, h, ticket_id, ticket_add_time, account, ticket_num, remark){
+                var _this = this;
+					$('#mem_ticket input[name="ticket_add_time"]').val(ticket_add_time);
+					$('#mem_ticket input[name="account_edit"]').val(account);
+					$('#mem_ticket input[name="ticket_num_edit"]').val(ticket_num);
+					$('#mem_ticket input[name="remark_edit"]').val(remark);
+
+                $.fancybox({
+                    href: '#' + id,
+                    fitToView: false,
+                    width: w,
+                    height: h,
+                    autoSize: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none',
+                    padding : 0
+
+                });
+                $('#fancybox-overlay').off().css('cursor', 'default');
+
+
+                var div = $('<div align="center" style="margin-top: 8px;"></div>'),
+                    btnSend = $('<button type="button" class="btn btn-primary" style="margin: 0 5px;">更新</button>'),
+                    btnCancel = $('<button type="button" class="btn btn-danger" style="margin: 0 5px;">取消</button>');
+
+                /* 更新 */
+                btnSend.on('click',  function(event){
+                    _this.mem_ticket('mod', ticket_id, ticket_add_time, account, ticket_num);
+                });
+
+                /* 取消 */
+                btnCancel.on('click', function(){
+                    $.fancybox.close();
+                });
+
+                div.append(btnSend).append(btnCancel);
+                $('.fancybox-wrap').append(div);
+            },
+            /* 取得期數資料 */
+            get_mem_ticket: function(){
+                sendFun.post('{burl}mem_ticket_set', {type:'qry'}, {
+                    onSuccess: function(res){
+                        jgrid.clearCurrent();
+                        jgrid.update('#ticketGrid', res.ticket_list);
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+			/* 手動新增 設定 */
+            mem_ticket: function (type, ticket_id, ticket_add_time_mod, account_mod, ticket_num_mod) {
+				var _this = this,
+					send = {};
+
+                /* 判斷是新增的畫面 還是 修改的畫面 */
+                if(type == 'add') {
+                    send['account'] = that.find('#account').val(); /* 帳號 */
+                    send['ticket_num'] = that.find('#ticket_num').val(); /* 兌換卷數量 */
+                    send['remark'] = that.find('#remark').val(); /* 備註 */
+                } else if(type == 'mod') {
+                    send['ticket_add_time'] = $('#mem_ticket input[name="ticket_add_time"]').val(); /* 兌獎卷新增時間 */
+                    send['account'] = $('#mem_ticket input[name="account_edit"]').val(); /* 會員帳號 */
+                    send['ticket_num'] = $('#mem_ticket input[name="ticket_num_edit"]').val(); /* 兌換卷數量 */
+                    send['remark'] = $('#mem_ticket input[name="remark_edit"]').val(); /* 備註 */
+
+					/* 判斷如果 修改 兌獎卷新增時間 會員賬號 的欄位 */
+					if (ticket_add_time_mod != send['ticket_add_time']) {
+                        popup.alert('系統提示', '兌獎卷新增時間 不能修改');
+                        return false;
+					} else if(account_mod != send['account']) {
+                        popup.alert('系統提示', '賬號 不能修改');
+                        return false;
+					}
+                }
+
+                /** 驗證空白------------------------------------- */
+                if(send['account'] === '') {
+                    popup.alert('系統提示', '未輸入會員賬號' , function () {
+                        that.find('#account').focus();
+                    });
+                    return false;
+                } else if(send['ticket_num'] === ''){
+                    popup.alert('系統提示', '未輸入兌獎卷數量', function () {
+                        type =='add' ? that.find('#ticket_num').focus():$('#mem_ticket input[name="ticket_num_edit"]').focus();
+                    });
+                    return false;
+                } else if(send['remark'] === '') {
+                    popup.alert('系統提示', '未輸入備註', function () {
+                        type =='add' ? that.find('#remark').focus():$('#mem_ticket input[name="remark_edit"]').focus();
+                    });
+                    return false;
+				}
+                /** 驗證空白 End---------------------------------- */
+
+                /* 驗證是否為整數 -----------------------------------*/
+                var ticket_num = isNaN(send['ticket_num']);
+                if(ticket_num) {
+                    popup.alert('系統提示', '兌換卷數量，請輸入數字', function () {
+                        type =='add' ? that.find('#ticket_num').focus():$('#mem_ticket input[name="ticket_num_edit"]').focus();
+                    });
+                    return false;
+                } else if(send['ticket_num'] <= 0) {
+                    popup.alert('系統提示', '兌換卷數量，不能低於0', function () {
+                        type =='add' ? that.find('#ticket_num').focus():$('#mem_ticket input[name="ticket_num_edit"]').focus();
+                    });
+                    return false;
+				}
+                /*  驗證是否為整數 End------------------------------ */
+
+                /* 會員兌換設定輸入條件都符合 ，則新增 或修改 */
+                sendFun.post('{burl}mem_ticket_set', {type:type, id:ticket_id, ticket_add_time:ticket_add_time_mod, send:send}, {
+                    onSuccess: function(res){
+                        popup.alert(res.title, res.msg, function () {
+                            $.fancybox.close(); /* 關閉視窗 */
+
+							/* 把值清空 */
+                            $('input.ticket').each(function() {
+                                $(this).val('');
+                            });
+
+                            /* 執行會員兌換獎資料 */
+                            _this.get_mem_ticket();
+                        });
+                    },
+                    onFail: function(res){
+                        popup.alert(res.title, res.msg);
+                    }
+                });
+            },
+            init: function(){
+                var _this = this;
+                _this.initUpload(); /* 上傳  */
+                _this.initGrid(); /* 表格標題 內容 */
+                _this.get_mem_ticket(); /* 會員兌換獎資料 */
+
+				/* 手動新增期數 */
+                that.find("#add_ticket").on('click', function(){
+                    _this.mem_ticket('add'); /* 手動輸入 兌換卷 */
+                });
+
+				/* 新增時間 排序 大到小 */
+                $("#ticketGrid").jqGrid('sortGrid', 'ticket_add_time', true, 'DESC');
+            }
+		};
+		fn.init();
+		return fn;
+	}
+	var hfn = new mem_tick_Fn();
+
+    /** 驗證是否為 正整數 */
+    function ValidateNumber(e, pnumber) {
+        if (!/^\d+$/.test(pnumber)) {
+            $(e).val(/^\d+/.exec($(e).val()));
+        }
+        return false;
+    }
+</script>
